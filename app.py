@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 app.debug = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/postgres'
+
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
 
 class Posts(db.Model):
@@ -22,6 +25,16 @@ class Posts(db.Model):
     def __repr__(self):
         return '<Posts : id=%r, title=%s, content=%s>' \
                 % (self.id, self.title, self.content)
+
+
+class PostsSchema(ma.Schema):
+    class Meta:
+        # Fields to expose
+        fields = ('id', 'title', 'content')
+
+
+posts_schema = PostsSchema()
+posts_schema = PostsSchema(many=True)
 
 
 @app.route('/admin')
@@ -44,6 +57,19 @@ def create_post():
 @app.route('/view-posts')
 def view_posts():
     return render_template('view-posts.html')
+
+
+@app.route('/get-posts')
+def get_posts():
+    results = Posts.query.all()
+    return posts_schema.jsonify(results)
+
+
+@app.route('/delete-post/<id>')
+def delete_post(id):
+    db.session.query(Posts).filter_by(id=id).delete()
+    db.session.commit()
+    return 'Post deleted successfully', 200
 
 
 @app.route('/user-settings')
