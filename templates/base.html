@@ -22,6 +22,10 @@
         <div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
+            <div class="sidebar-heading">
+                <p><span class="sidebar-heading-content-1">Galactic</span></p>
+                <p><span class="sidebar-heading-content-2">CMS</span></p>
+            </div>
             <ul class="nav nav-sidebar">
                 <li class="active"><a href="{{ url_for('show_admin') }}">Dashboard <span class="sr-only">(current)</span></a></li>
                 <li><a href="{{ url_for('create_post') }}">Create New Post</a></li>
@@ -32,6 +36,11 @@
                 <li><a href="{{ url_for('show_help') }}">Help</a></li>
                 <li><a href="{{ url_for('sign_out') }}">Sign Out</a></li>
             </ul>
+            <div class="beta-wrapper">
+                <p>
+                    <span>beta</span>
+                </p>
+            </div>
         </div>
 
         {% block content %}
