@@ -2,6 +2,20 @@
 
 {% block content %}
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">View Posts</h1>
+
+	<h1 class="page-header">
+	  <span>View Posts</span>
+	</h1>
+
+	<div class="view-posts-content">
+
+
+
+	</div>
+
 </div>
-  {% endblock %}
+{% endblock %}
+
+{% block additional_scripts %}
+<script src="{{ url_for('static', filename='view-posts.js')}}"></script>
+{% endblock %}

@@ -4,7 +4,7 @@ $("#create-post-submit").on("click", function(e) {
     e.preventDefault();
 
     if ($("#post-title").val() == "" || $("#post-content").val() == "") {
-        displayNotification("failure", "Please enter", "all mandatory fields", 5000, 1000);
+        displayNotification("failure", "Please enter", "all mandatory fields", 3000, 1000);
     } else {
         $.ajax({
             type: "POST",

@@ -245,3 +245,31 @@
 .button-positive:disabled {
   color: #9997F0;
 }
+
+
+
+.btn-delete-post {
+  background-color: #EA5455;
+}
+
+.btn-edit-post {
+  background-color: #7367F0;
+}
+
+.btn-view-post {
+  background-color: #CE9FFC;
+}
+
+.btn-delete-post, .btn-edit-post, .btn-view-post {
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  padding: 5px;
+}
+
+
+.form-group label {
+  background-color: #7367F0;
+  color: #fff;
+  padding: 5px;
+}
