@@ -18,7 +18,7 @@ $("#create-post-submit").on("click", function(e) {
             },
             error: function(response) {
                 // Handle error response here
-                displayNotification("failure", "Error found when", "creating new blog post", 5000, 1000);
+                displayNotification("failure", "Error occurred when", "creating new blog post", 5000, 1000);
             }
         });
     }
