@@ -4,16 +4,15 @@ $(document).ready(function(){
         type: "GET",
         url: "/get-posts",
         success: function(response) {
-            // Handle success response here
-            console.log(response);
+
+            var table = $("<table class='table table-striped view-posts-table'></table>");
+            $(".view-posts-content").append(table);
 
             if (response.length === 0) {
-                // Handle zero posts returned here
+                $(".view-posts-table").append("<thead><tr><th>Post Title</th><th>View Post</th><th>Edit Post</th><th>Delete Post</th></tr></thead>");
+                $(".view-posts-table").append("<tbody><tr><td class='zero-posts' colspan='4'><p>No posts currently exist.</p><p>Why not <a href='./create-post'>add a new post</a>?</p></td></tr></tbody>");
             } else {
 
-                var table = $("<table class='table table-striped view-posts-table'></table>");
-
-                $(".view-posts-content").append(table);
                 $(".view-posts-table").append("<thead><tr><th>Post Title</th><th>View Post</th><th>Edit Post</th><th>Delete Post</th></tr></thead>");
                 $(".view-posts-table").append("<tbody></tbody>");
 
@@ -82,7 +81,7 @@ $(document).ready(function(){
                 }, timer1);
 
             }
-            
+
         },
         error: function(response) {
             // Handle error response here

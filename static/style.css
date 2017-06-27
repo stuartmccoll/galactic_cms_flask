@@ -273,3 +273,28 @@
   color: #fff;
   padding: 5px;
 }
+
+.zero-posts p {
+  margin: 0;
+  text-align: center;
+  padding: 5px;
+}
+
+.zero-posts p:first-of-type {
+  color: #7367F0;
+  font-size: 1.6em;
+}
+
+.zero-posts p:nth-of-type(2) {
+  color: #CE9FFC;
+  font-size: 1.4em;
+}
+
+.zero-posts p a {
+  color: #CE9FFC;
+  text-decoration: underline;
+}
+
+.zero-posts p a:hover {
+  color: #7367F0;
+}
