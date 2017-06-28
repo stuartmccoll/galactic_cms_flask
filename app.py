@@ -72,18 +72,17 @@ def delete_post(id):
     return 'Post deleted successfully', 200
 
 
-@app.route('/edit-post/<id>')
+@app.route('/edit-post/<id>', methods=['GET', 'POST'])
 def edit_post(id):
     returned_post = Posts.query.filter_by(id=id).first()
     if request.method == 'GET':
         return render_template('edit-post.html', title=returned_post.title,
-                               content=returned_post.content)
+                               content=returned_post.content, id=id)
     if request.method == 'POST':
-        post = Posts(title=request.form['post-title'],
-                     content=request.form['post-content'])
-        db.session.add(post)
+        returned_post.title = request.form['post-title']
+        returned_post.content = request.form['post-content']
         db.session.commit()
-        return 'Post created successfully', 200
+        return 'Post updated successfully', 200
 
 
 @app.route('/user-settings')

@@ -4,10 +4,10 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
   
 	<h1 class="page-header">
-	  <span>Editing Post: {{ title }}</span>
+	  <span>Edit Post</span>
 	</h1>
 
-	<form id="create-post" method="post">
+	<form id="update-post" method="post">
 
 		<div class="form-group">
 
@@ -25,6 +25,7 @@
 
 		<div class="form-group">
 
+            <input type="hidden" id="hidden-id" value="{{ id }}" />
 			<button id="update-post-submit" class="button-positive">Update Post</button>
 
 		</div>

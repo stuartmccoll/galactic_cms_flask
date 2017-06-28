@@ -24,6 +24,32 @@ $("#create-post-submit").on("click", function(e) {
     }
 });
 
+$("#update-post-submit").on("click", function(e) {
+    $(this).attr("disabled", "disabled");
+
+    var post_id = $("#hidden-id").val();
+
+    if ($("#post-title").val() == "" || $("#post-content").val() == "") {
+        displayNotification("failure", "Please enter", "all mandatory fields", 3000, 1000);
+    } else {
+        $.ajax({
+            type: "POST",
+            url: "/edit-post/"+post_id,
+            data: $("#update-post").serialize(),
+            success: function(response) {
+                // Handle success response here
+                displayNotification("success", "Blog post", "updated successfully", 5000, 1000);
+                // Prevent the form from refreshing the page
+                e.preventDefault();
+            },
+            error: function(response) {
+                // Handle error response here
+                displayNotification("failure", "Error occurred when", "updating blog post", 5000, 1000);
+            }
+        });
+    }
+});
+
 function displayNotification(type, message1, message2, timer1, timer2) {
 
     if (type == "failure") {
@@ -57,6 +83,7 @@ function displayNotification(type, message1, message2, timer1, timer2) {
             }
 
             $("#create-post-submit").removeAttr("disabled");
+            $("#update-post-submit").removeAttr("disabled");
         }, timer2);
     }, timer1);
 
