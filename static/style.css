@@ -298,3 +298,30 @@
 .zero-posts p a:hover {
   color: #7367F0;
 }
+
+
+
+
+
+.login-body {
+  height: 100%;
+  background-image: linear-gradient( 135deg, #CE9FFC 0%, #7367F0 100%);
+}
+
+.login-container {
+  background-color: #fff;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.vertical-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  display: -webkit-flex;
+  -webkit-align-items: center;
+  -webkit-justify-content: center;
+}

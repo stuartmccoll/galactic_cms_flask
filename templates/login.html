@@ -1,0 +1,82 @@
+<!doctype html>
+
+<html class="login-body">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Galactic CMS</title>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}" />
+
+    </head>
+
+    <body class="login-body">
+
+    <div class="container-fluid full-height">
+
+        <div class="row full-height vertical-center">
+
+            <div class="col-sm-4 login-container">
+
+                <h1>Galactic CMS</h1>
+
+                <form id="login-form" action="login" method="post">
+
+                    <div class="form-group">
+
+                        <label for="login-username">Username</label>
+
+                        <input type="text" class="form-control" name="login-username" id="login-username" />
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="login-password">Password</label>
+
+                        <input type="password" class="form-control" name="login-password" id="login-password" />
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <!--<button id="login-submit" class="button-positive">Login</button>-->
+                        <input type="submit" value="Login" />
+
+                    </div>
+
+                    </div>
+
+
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <script src="{{ url_for('static', filename='script.js')}}"></script>
+        {% block additional_scripts %}
+        {% endblock %}
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    </body>
+
+</html>
