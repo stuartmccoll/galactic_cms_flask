@@ -4,11 +4,24 @@ from flask_marshmallow import Marshmallow
 from flask_login import LoginManager, login_user, logout_user, login_required
 
 from user import User
+from datetime import datetime
+
+DBUSER = 'galactic'
+DBPASS = 'password'
+DBHOST = 'database'
+DBPORT = '5432'
+DBNAME = 'testdb'
 
 app = Flask(__name__)
 app.debug = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = \
+    'postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{db}'.format(
+        user=DBUSER,
+        passwd=DBPASS,
+        host=DBHOST,
+        port=DBPORT,
+        db=DBNAME)
 app.config['SECRET_KEY'] = 'ITSASECRET'
 
 db = SQLAlchemy(app)
@@ -30,12 +43,16 @@ class Posts(db.Model):
     __tablename__ = 'posts'
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150))
-    content = db.Column(db.String(150))
+    title = db.Column(db.String(150), nullable=False)
+    content = db.Column(db.String, nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, title, content):
+    def __init__(self, title, content, date_posted, user_id):
         self.title = title
         self.content = content
+        self.date_posted = datetime.now()
+        self.user_id = 2
 
     def __repr__(self):
         return '<Posts : id=%r, title=%s, content=%s>' \
@@ -50,6 +67,8 @@ class PostsSchema(ma.Schema):
 
 posts_schema = PostsSchema()
 posts_schema = PostsSchema(many=True)
+
+db.create_all()
 
 
 @app.route('/admin')
@@ -81,7 +100,7 @@ def create_post():
         return render_template('create-post.html')
     if request.method == 'POST':
         post = Posts(title=request.form['post-title'],
-                     content=request.form['post-content'])
+                     content=request.form['post-content'], date_posted='a', user_id=2)
         db.session.add(post)
         db.session.commit()
         return 'Post created successfully', 200
