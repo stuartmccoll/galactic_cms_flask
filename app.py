@@ -2,9 +2,10 @@ from flask import Flask, render_template, request, session, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_login import LoginManager, login_user, logout_user, login_required
+from datetime import datetime
 
 from models.user import User
-from datetime import datetime
+
 
 DBUSER = 'galactic'
 DBPASS = 'password'
@@ -36,6 +37,7 @@ users = [User(id) for id in range(1, 21)]
 
 @login_manager.user_loader
 def load_user(userid):
+    # user = User.query.filter_by(id=user_id).first()
     return User(userid)
 
 
@@ -127,6 +129,9 @@ def delete_post(id):
     db.session.query(Posts).filter_by(id=id,
                                       user_id=session['user_id']).delete()
     db.session.commit()
+
+    # TODO Change return based on the outcome of the delete
+
     return 'Post deleted successfully', 200
 
 

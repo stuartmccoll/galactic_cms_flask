@@ -27,13 +27,22 @@
                 <p><span class="sidebar-heading-content-2">CMS</span></p>
             </div>
             <ul class="nav nav-sidebar">
-                <li class="active"><a href="{{ url_for('show_admin') }}">Dashboard <span class="sr-only">(current)</span></a></li>
-                <li><a href="{{ url_for('create_post') }}">Create New Post</a></li>
-                <li><a href="{{ url_for('view_posts') }}">View Posts</a></li>
-                <li><a href="{{ url_for('user_settings') }}">User Settings</a></li>
-                <li><a href="{{ url_for('site_config') }}">Site Configuration</a></li>
-                <li><a href="{{ url_for('raise_support_ticket') }}">Raise Support Ticket</a></li>
-                <li><a href="{{ url_for('show_help') }}">Help</a></li>
+                {% set sidebar = [
+                    (url_for('show_admin'), "dashboard", "Dashboard"),
+                    (url_for('create_post'), "create_post", "Create New Post"),
+                    (url_for('view_posts'), "view_posts", "View Posts"),
+                    (url_for('user_settings'), "user_settings", "User Settings"),
+                    (url_for('site_config'), "site_config", "Site Configuration"),
+                    (url_for('raise_support_ticket'), "raise_support_ticket", "Raise Support Ticket"),
+                    (url_for('show_help'), "show_help", "Help")
+                ] -%}
+
+                {% set active_page = active_page|default('dashboard') -%}
+
+                {% for href, id, caption in sidebar %}
+                <li {% if id == active_page %} class="active"{% endif %}><a href="{{ href|e }}">{{ caption|e }}</a></li>
+                {% endfor %}
+                
                 <li><a href="{{ url_for('sign_out') }}">Sign Out</a></li>
             </ul>
             <div class="beta-wrapper">
