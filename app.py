@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_login import LoginManager, login_user, logout_user, login_required
 
-from user import User
+from models.user import User
 from datetime import datetime
 
 DBUSER = 'galactic'
@@ -62,7 +62,7 @@ class Posts(db.Model):
 class PostsSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ('id', 'title', 'content')
+        fields = ('id', 'title', 'content', 'date_posted', 'user_id')
 
 
 posts_schema = PostsSchema()
@@ -89,7 +89,7 @@ def show_login():
             id = username.split('user')[1]
             user = User(id)
             login_user(user)
-            session['user_id'] = 1
+            session['user_id'] = id
             return redirect('/admin')
 
 
@@ -100,7 +100,8 @@ def create_post():
         return render_template('create-post.html')
     if request.method == 'POST':
         post = Posts(title=request.form['post-title'],
-                     content=request.form['post-content'], date_posted='a', user_id=2)
+                     content=request.form['post-content'], date_posted='a',
+                     user_id=session['user_id'])
         db.session.add(post)
         db.session.commit()
         return 'Post created successfully', 200
@@ -115,14 +116,16 @@ def view_posts():
 @app.route('/get-posts')
 @login_required
 def get_posts():
-    results = Posts.query.all()
+    results = db.session.query(Posts) \
+              .filter_by(user_id=session['user_id']).all()
     return posts_schema.jsonify(results)
 
 
 @app.route('/delete-post/<id>')
 @login_required
 def delete_post(id):
-    db.session.query(Posts).filter_by(id=id).delete()
+    db.session.query(Posts).filter_by(id=id,
+                                      user_id=session['user_id']).delete()
     db.session.commit()
     return 'Post deleted successfully', 200
 
@@ -130,7 +133,8 @@ def delete_post(id):
 @app.route('/edit-post/<id>', methods=['GET', 'POST'])
 @login_required
 def edit_post(id):
-    returned_post = Posts.query.filter_by(id=id).first()
+    returned_post = db.session.query(Posts) \
+                    .filter_by(id=id, user_id=session['user_id']).first()
     if request.method == 'GET':
         return render_template('edit-post.html', title=returned_post.title,
                                content=returned_post.content, id=id)

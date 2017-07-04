@@ -1,6 +1,6 @@
 FROM python:2.7
 
-MAINTAINER Stuart McColl "contact@stuartmccoll.co.uk"
+MAINTAINER Stuart McColl "it@stuartmccoll.co.uk"
 
 ADD . /app
 
