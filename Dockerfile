@@ -10,6 +10,7 @@ RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-ENV FLASK_APP=app.py
+ENV FLASK_APP=manage.py
 
-CMD [ "python", "-m", "flask", "run", "--host=0.0.0.0" ]
+# CMD [ "python", "-m", "flask", "run", "--host=0.0.0.0" ]
+CMD [ "python", "manage.py", "runserver", "-h=0.0.0.0", "-p=5000"]

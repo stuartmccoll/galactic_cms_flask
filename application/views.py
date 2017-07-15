@@ -1,76 +1,26 @@
-from flask import Flask, render_template, request, session, redirect
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
-from flask_login import LoginManager, login_user, logout_user, login_required
 from datetime import datetime
+from flask import render_template, request, session, redirect, flash
+from flask_login import LoginManager, login_user, logout_user, login_required
+# from flask_marshmallow import Marshmallow
+# from flask_migrate import Migrate, MigrateCommand
+# from flask_script import Manager
+# from flask_sqlalchemy import SQLAlchemy
 
+from init_app import app, db
 from models.user import User
+from models.post import Posts, posts_schema
 
-
-DBUSER = 'galactic'
-DBPASS = 'password'
-DBHOST = 'database'
-DBPORT = '5432'
-DBNAME = 'testdb'
-
-app = Flask(__name__)
-app.debug = True
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = \
-    'postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{db}'.format(
-        user=DBUSER,
-        passwd=DBPASS,
-        host=DBHOST,
-        port=DBPORT,
-        db=DBNAME)
-app.config['SECRET_KEY'] = 'ITSASECRET'
-
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-# Create random users for testing purposes - TODO: Remove this
-users = [User(id) for id in range(1, 21)]
+# Return the show_login function if the user has not been authenticated
+login_manager.login_view = 'show_login'
 
 
 @login_manager.user_loader
-def load_user(userid):
-    # user = User.query.filter_by(id=user_id).first()
-    return User(userid)
-
-
-class Posts(db.Model):
-    __tablename__ = 'posts'
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150), nullable=False)
-    content = db.Column(db.String, nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)
-
-    def __init__(self, title, content, date_posted, user_id):
-        self.title = title
-        self.content = content
-        self.date_posted = datetime.now()
-        self.user_id = 2
-
-    def __repr__(self):
-        return '<Posts : id=%r, title=%s, content=%s>' \
-                % (self.id, self.title, self.content)
-
-
-class PostsSchema(ma.Schema):
-    class Meta:
-        # Fields to expose
-        fields = ('id', 'title', 'content', 'date_posted', 'user_id')
-
-
-posts_schema = PostsSchema()
-posts_schema = PostsSchema(many=True)
-
-db.create_all()
+def load_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    return user
 
 
 @app.route('/admin')
@@ -86,13 +36,14 @@ def show_login():
     if request.method == 'POST':
         username = request.form['login-username']
         password = request.form['login-password']
-        # TODO: Remove the next conditional - this is here for testing purposes
-        if password == username:
-            id = username.split('user')[1]
-            user = User(id)
+        user = User.query.filter_by(username=username).first()
+        if user and User.validate_login(user.password, str(password)):
             login_user(user)
-            session['user_id'] = id
+            session['user_id'] = user.id
+            flash("Logged in successfully", category='success')
             return redirect('/admin')
+        flash("Invalid login credentials provided", category='error')
+        return render_template('login.html')
 
 
 @app.route('/create-post', methods=['GET', 'POST'])
@@ -102,7 +53,8 @@ def create_post():
         return render_template('create-post.html')
     if request.method == 'POST':
         post = Posts(title=request.form['post-title'],
-                     content=request.form['post-content'], date_posted='a',
+                     content=request.form['post-content'],
+                     date_posted=datetime.now(),
                      user_id=session['user_id'])
         db.session.add(post)
         db.session.commit()
@@ -126,12 +78,10 @@ def get_posts():
 @app.route('/delete-post/<id>')
 @login_required
 def delete_post(id):
-    db.session.query(Posts).filter_by(id=id,
-                                      user_id=session['user_id']).delete()
+    db.session.query(Posts).filter_by(id=id, user_id=session['user_id']) \
+                                      .delete()
     db.session.commit()
-
     # TODO Change return based on the outcome of the delete
-
     return 'Post deleted successfully', 200
 
 
