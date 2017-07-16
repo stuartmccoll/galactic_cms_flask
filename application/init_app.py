@@ -4,28 +4,24 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask_sqlalchemy import SQLAlchemy
 
-DBUSER = 'galactic'
-DBPASS = 'password'
-DBHOST = 'database'
-DBPORT = '5432'
-DBNAME = 'testdb'
+import config as app_config
 
 app = Flask(__name__)
+
 app.debug = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = \
     'postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{db}'.format(
-        user=DBUSER,
-        passwd=DBPASS,
-        host=DBHOST,
-        port=DBPORT,
-        db=DBNAME)
-app.config['SECRET_KEY'] = 'ITSASECRET'
+        user=app_config.DBUSER,
+        passwd=app_config.DBPASS,
+        host=app_config.DBHOST,
+        port=app_config.DBPORT,
+        db=app_config.DBNAME)
+app.config['SECRET_KEY'] = app_config.SECRET_KEY
 
-# Initialise Flask-SQLAlchemy
 db = SQLAlchemy()
-ma = Marshmallow(app)  # Initialise Flask-Marshmallow
-manager = Manager(app)  # Initialise Flask-Script
+ma = Marshmallow(app)
+manager = Manager(app)
 
 
 def init_app(app, extra_config_settings={}):

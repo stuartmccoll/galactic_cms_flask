@@ -7,8 +7,9 @@ from flask_login import LoginManager, login_user, logout_user, login_required
 # from flask_sqlalchemy import SQLAlchemy
 
 from init_app import app, db
-from models.user import User
 from models.post import Posts, posts_schema
+from models.user import User
+from models.user_profile import UserProfile
 
 
 login_manager = LoginManager()
@@ -41,7 +42,8 @@ def show_login():
             login_user(user)
             session['user_id'] = user.id
             return redirect('/admin')
-        flash("Invalid login credentials provided\nPlease try again", category='error')
+        flash("Invalid login credentials provided\nPlease try again",
+              category='error')
         return render_template('login.html')
 
 
@@ -99,10 +101,26 @@ def edit_post(id):
         return 'Post updated successfully', 200
 
 
-@app.route('/user-settings')
+@app.route('/user-settings', methods=['GET', 'POST'])
 @login_required
 def user_settings():
-    return render_template('user-settings.html')
+    user_profile = UserProfile.query. \
+                       filter_by(id=session['user_id']).first()
+    if request.method == 'POST':
+        if not user_profile:
+            user_profile = UserProfile(id=session['user_id'],
+                                       first_name=request.form['first-name'],
+                                       last_name=request.form['last-name'])
+        if user_profile:
+            user_profile.first_name = request.form['first-name']
+            user_profile.last_name = request.form['last-name']
+        db.session.add(user_profile)
+        db.session.commit()
+        return 'User settings updated successfully', 200
+    if request.method == 'GET':
+        return render_template('user-settings.html',
+                               first_name=user_profile.first_name,
+                               last_name=user_profile.last_name)
 
 
 @app.route('/site-config')

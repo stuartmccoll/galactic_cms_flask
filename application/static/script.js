@@ -50,6 +50,29 @@ $("#update-post-submit").on("click", function(e) {
     }
 });
 
+$("#update-settings-submit").on("click", function(e) {
+    $(this).attr("disabled", "disabled");
+    // Prevent the form from refreshing the page
+    e.preventDefault();
+    if ($("#first-name").val() == "" || $("#last-name").val() == "") {
+        displayNotification("failure", "Please enter", "all mandatory fields", 3000, 1000);
+    } else {
+        $.ajax({
+            type: "POST",
+            url: "/user-settings",
+            data: $("#user-settings").serialize(),
+            success: function(response) {
+                // Handle success response here
+                displayNotification("success", "User settings", "updated successfully", 5000, 1000);
+            },
+            error: function(response) {
+                // Handle error response here
+                displayNotification("failure", "Error occurred when", "updating user settings", 5000, 1000);
+            }
+        });
+    }
+});
+
 function displayNotification(type, message1, message2, timer1, timer2) {
 
     if (type == "failure") {
@@ -84,6 +107,7 @@ function displayNotification(type, message1, message2, timer1, timer2) {
 
             $("#create-post-submit").removeAttr("disabled");
             $("#update-post-submit").removeAttr("disabled");
+            $("#update-settings-submit").removeAttr("disabled");
         }, timer2);
     }, timer1);
 

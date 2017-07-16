@@ -3,6 +3,52 @@
 
 {% block content %}
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">User Settings</h1>
+
+  <h1 class="page-header">
+    <span>User Settings</span>
+  </h1>
+
+  <form id="user-settings" method="post">
+
+		<div class="form-group">
+
+			<label for="first-name">First Name</label>
+      <input type="text" class="form-control" id="first-name" name="first-name" placeholder="First Name" {% if first_name %} value="{{ first_name }}" {% endif %} />
+
+		</div>
+
+		<div class="form-group">
+
+			<label for="last-name">Last Name</label>
+			<input type="text" class="form-control" id="last-name" name="last-name" placeholder="Last Name" {% if last_name %} value="{{ last_name }}" {% endif %} />
+
+		</div>
+
+		<div class="form-group">
+
+			<button id="update-settings-submit" class="button-positive">Update</button>
+
+		</div>
+
+	</form>
+
+	<div class="row notification-wrapper">
+
+		<div class="col-sm-12 notification-success">
+
+			<p><span class="success-message-1"></span></p>
+			<p><span class="success-message-2"></span></p>
+
+		</div>
+
+		<div class="col-sm-12 notification-failure">
+
+			<p><span class="failure-message-1"></span></p>
+			<p><span class="failure-message-2"></span></p>
+
+		</div>
+
+	</div>
+
 </div>
   {% endblock %}
