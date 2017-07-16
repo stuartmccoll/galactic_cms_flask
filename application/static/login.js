@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    if ($(".failure-message-1").text().length > 0) {
+    if ($(".failure-message-1").text() == "Invalid login credentials provided") {
 
         $(".notification-failure").css("display", "block");
     
