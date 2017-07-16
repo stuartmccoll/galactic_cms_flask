@@ -62,17 +62,35 @@
 
         </div>
 
-        {% block content %}
-        {% endblock %}
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="row notification-wrapper">
+
+                        <div class="col-sm-12 notification-failure">
+
+                            <p><span class="failure-message-1">{{ message.split('\n')[0] }}</span></p>
+                            <p><span class="failure-message-2">{{ message.split('\n')[1] }}</span></p>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
 
     </div>
 
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-        <script src="{{ url_for('static', filename='script.js')}}"></script>
-        {% block additional_scripts %}
-        {% endblock %}
+        <script src="{{ url_for('static', filename='login.js')}}"></script>
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>

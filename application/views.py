@@ -42,7 +42,7 @@ def show_login():
             session['user_id'] = user.id
             flash("Logged in successfully", category='success')
             return redirect('/admin')
-        flash("Invalid login credentials provided", category='error')
+        flash("Invalid login credentials provided\nPlease try again", category='error')
         return render_template('login.html')
 
 
