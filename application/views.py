@@ -1,6 +1,7 @@
 from datetime import datetime
-from flask import render_template, request, session, redirect, flash
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask import render_template, request, redirect, flash
+from flask_login import LoginManager, login_user, logout_user, \
+                        login_required, current_user
 # from flask_marshmallow import Marshmallow
 # from flask_migrate import Migrate, MigrateCommand
 # from flask_script import Manager
@@ -28,9 +29,9 @@ def load_user(user_id):
 @login_required
 def show_admin():
     posts = db.session.query(Posts) \
-              .filter_by(user_id=session['user_id']) \
+              .filter_by(user_id=current_user.get_id()) \
               .order_by(Posts.date_posted.desc()).limit(5)
-    user = User.query.filter_by(id=session['user_id']).first()
+    user = User.query.filter_by(id=current_user.get_id()).first()
     user_profile = UserProfile.query.filter_by(id=user.user_profile_id) \
         .first()
     return render_template('admin.html', all_posts=posts,
@@ -47,7 +48,6 @@ def show_login():
         user = User.query.filter_by(username=username).first()
         if user and User.validate_login(user.password, str(password)):
             login_user(user)
-            session['user_id'] = user.id
             return redirect('/admin')
         flash("Invalid login credentials provided\nPlease try again",
               category='error')
@@ -63,7 +63,7 @@ def create_post():
         post = Posts(title=request.form['post-title'],
                      content=request.form['post-content'],
                      date_posted=datetime.now(),
-                     user_id=session['user_id'])
+                     user_id=current_user.get_id())
         db.session.add(post)
         db.session.commit()
         return 'Post created successfully', 200
@@ -79,14 +79,14 @@ def view_posts():
 @login_required
 def get_posts():
     results = db.session.query(Posts) \
-              .filter_by(user_id=session['user_id']).all()
+              .filter_by(user_id=current_user.get_id()).all()
     return posts_schema.jsonify(results)
 
 
 @app.route('/delete-post/<id>')
 @login_required
 def delete_post(id):
-    db.session.query(Posts).filter_by(id=id, user_id=session['user_id']) \
+    db.session.query(Posts).filter_by(id=id, user_id=current_user.get_id()) \
                                       .delete()
     db.session.commit()
     # TODO Change return based on the outcome of the delete
@@ -97,7 +97,7 @@ def delete_post(id):
 @login_required
 def edit_post(id):
     returned_post = db.session.query(Posts) \
-                    .filter_by(id=id, user_id=session['user_id']).first()
+                    .filter_by(id=id, user_id=current_user.get_id()).first()
     if request.method == 'GET':
         return render_template('edit-post.html', title=returned_post.title,
                                content=returned_post.content, id=id)
@@ -111,11 +111,11 @@ def edit_post(id):
 @app.route('/user-settings', methods=['GET', 'POST'])
 @login_required
 def user_settings():
-    user_profile = UserProfile.query. \
-                       filter_by(id=session['user_id']).first()
+    user = User.query.filter_by(id=current_user.get_id()).first()
+    user_profile = UserProfile.query.filter_by(id=user.user_profile_id).first()
     if request.method == 'POST':
         if not user_profile:
-            user_profile = UserProfile(id=session['user_id'],
+            user_profile = UserProfile(id=current_user.get_id(),
                                        first_name=request.form['first-name'],
                                        last_name=request.form['last-name'])
         if user_profile:

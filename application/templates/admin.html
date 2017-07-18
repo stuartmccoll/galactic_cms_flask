@@ -72,7 +72,7 @@
 
       {% if user_profile.first_name %}
 
-        <p class="user-profile-name">Stuart McColl</p>
+        <p class="user-profile-name">{{ user_profile.first_name}} {{ user_profile.last_name }}</p>
 
       {% else %}
 
