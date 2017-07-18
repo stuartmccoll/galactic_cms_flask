@@ -73,6 +73,29 @@ $("#update-settings-submit").on("click", function(e) {
     }
 });
 
+$(".btn-delete-post").on("click", function() {
+
+    var post_id = event.target.id.toString().replace("delete-post-", "");
+    
+    $.ajax({
+        type: "GET",
+        url: "/delete-post/" + post_id,
+        success: function(response) {
+            // Obtain the class name of the relevant row then remove it from the table
+            console.log(response);
+            if (response === "Post deleted successfully") {
+                var row_name = ".row-"+post_id;
+                $(row_name).remove();
+                displayNotification("success", "Blog post", "deleted successfully", 5000, 1000);
+            }
+        },
+        error: function(response) {
+            displayNotification("failure", "Error occurred when", "deleting blog post", 5000, 1000);
+        } 
+    })
+
+});
+
 function displayNotification(type, message1, message2, timer1, timer2) {
 
     if (type == "failure") {

@@ -17,7 +17,7 @@ $(document).ready(function(){
                 $(".view-posts-table").append("<tbody></tbody>");
 
                 for(i = 0; i < response.length; i++)
-                    $(".view-posts-table").append("<tr class='row-"+response[i].id+"'><td class='col-md-9'>"+response[i].title+"</td><td class='col-md-1'><button class='btn-view-post'>View Post</button</td><td class='col-md-1'><button id='edit-post-"+response[i].id+"'class='btn-edit-post'>Edit Post</button></td><td class='col-md-1'><button id='delete-post-"+response[i].id+"' class='btn-delete-post'>Delete Post</button></td></tr>");
+                    $(".view-posts-table").append("<tr class='row-"+response[i].id+"'><td class='col-md-9'>"+response[i].title+"</td><td class='col-md-1'><button class='btn-view-post'>View Post</button></td><td class='col-md-1'><button id='edit-post-"+response[i].id+"'class='btn-edit-post'>Edit Post</button></td><td class='col-md-1'><button id='delete-post-"+response[i].id+"' class='btn-delete-post'>Delete Post</button></td></tr>");
 
             }
 

@@ -1,4 +1,4 @@
-# galactic_cms_flask
+# Galactic CMS
 A lightweight content management built using Python, Flask and Postgres.
 
 # Installation

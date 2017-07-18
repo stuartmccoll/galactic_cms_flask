@@ -325,3 +325,19 @@
   -webkit-align-items: center;
   -webkit-justify-content: center;
 }
+
+
+
+.user-profile-name {
+  font-size: 1.2em;
+  text-align: center;
+  color: #636363;
+  font-weight: bold;
+  letter-spacing: 1px;
+  padding: 5px;
+  margin: 0;
+}
+
+a:hover {
+  text-decoration: none;
+}

@@ -27,7 +27,14 @@ def load_user(user_id):
 @app.route('/admin')
 @login_required
 def show_admin():
-    return render_template('admin.html')
+    posts = db.session.query(Posts) \
+              .filter_by(user_id=session['user_id']) \
+              .order_by(Posts.date_posted.desc()).limit(5)
+    user = User.query.filter_by(id=session['user_id']).first()
+    user_profile = UserProfile.query.filter_by(id=user.user_profile_id) \
+        .first()
+    return render_template('admin.html', all_posts=posts,
+                           user=user, user_profile=user_profile)
 
 
 @app.route('/login', methods=['GET', 'POST'])
