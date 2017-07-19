@@ -20,41 +20,40 @@
     <body>
 
         <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-            <div class="sidebar-heading">
-                <p><span class="sidebar-heading-content-1">Galactic</span></p>
-                <p><span class="sidebar-heading-content-2">CMS</span></p>
-            </div>
-            <ul class="nav nav-sidebar">
-                {% set sidebar = [
-                    (url_for('show_admin'), "dashboard", "Dashboard"),
-                    (url_for('create_post'), "create_post", "Create New Post"),
-                    (url_for('view_posts'), "view_posts", "View Posts"),
-                    (url_for('user_settings'), "user_settings", "User Settings"),
-                    (url_for('site_config'), "site_config", "Site Configuration"),
-                    (url_for('raise_support_ticket'), "raise_support_ticket", "Raise Support Ticket"),
-                    (url_for('show_help'), "show_help", "Help")
-                ] -%}
+            <div class="row">
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <div class="sidebar-heading">
+                        <p><span class="sidebar-heading-content-1">Galactic</span></p>
+                        <p><span class="sidebar-heading-content-2">CMS</span></p>
+                    </div>
+                    <ul class="nav nav-sidebar">
+                        {% set sidebar = [
+                            (url_for('show_admin'), "dashboard", "Dashboard"),
+                            (url_for('create_post'), "create_post", "Create New Post"),
+                            (url_for('view_posts'), "view_posts", "View Posts"),
+                            (url_for('user_settings'), "user_settings", "User Settings"),
+                            (url_for('site_config'), "site_config", "Site Configuration"),
+                            (url_for('raise_support_ticket'), "raise_support_ticket", "Raise Support Ticket"),
+                            (url_for('show_help'), "show_help", "Help")
+                        ] -%}
 
-                {% set active_page = active_page|default('dashboard') -%}
+                        {% set active_page = active_page|default('dashboard') -%}
 
-                {% for href, id, caption in sidebar %}
-                <li {% if id == active_page %} class="active"{% endif %}><a href="{{ href|e }}">{{ caption|e }}</a></li>
-                {% endfor %}
-                
-                <li><a href="{{ url_for('sign_out') }}">Sign Out</a></li>
-            </ul>
-            <div class="beta-wrapper">
-                <p>
-                    <span>beta</span>
-                </p>
-            </div>
-        </div>
+                        {% for href, id, caption in sidebar %}
+                        <li {% if id == active_page %} class="active"{% endif %}><a href="{{ href|e }}">{{ caption|e }}</a></li>
+                        {% endfor %}
+                        
+                        <li><a href="{{ url_for('sign_out') }}">Sign Out</a></li>
+                    </ul>
+                    <div class="beta-wrapper">
+                        <p>
+                            <span>beta</span>
+                        </p>
+                    </div>
+                </div>
 
-        {% block content %}
-        {% endblock %}
-
+            {% block content %}
+            {% endblock %}
 
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
