@@ -10,7 +10,51 @@
 
 	<div class="view-posts-content">
 
+		<table class='table table-striped view-posts-table'>
 
+			<thead>
+				
+				<tr>
+					
+					<th>Post Title</th>
+					<th>Date Posted</th>
+					<th>View Post</th>
+					<th>Edit Post</th>
+					<th>Delete Post</th>
+				
+				</tr>
+			
+			</thead>
+
+			<tbody>
+
+			{% if posts.count() > 0 %}
+
+				{% for post in posts %}
+
+					<tr class="row-{{ post.id }}">
+
+						<td><a href="/edit-post/{{ post.id }}">{{ post.title }}</a></td>
+						<td>{{ post.date_posted.strftime('%a %d %b %Y %H:%M') }}</td>
+						<td><button class='btn-view-post'><span class="glyphicon glyphicon-search" aria-hidden="true"></span> View Post</button></td>
+						<td><button id='edit-post-{{ post.id }}'class='btn-edit-post'><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit Post</button></td>
+						<td><button data-toggle="modal" data-target="#galactic-modal" id='delete-post-{{ post.id }}'class='btn-delete-post'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete Post</button></td>
+
+				</tr>
+				
+				{% endfor %}
+
+			{% else %}
+
+			<tr>
+				<td class='zero-posts' colspan='5'><p>No posts currently exist.</p><p>Why not <a href='./create-post'>add a new post</a>?</p></td>
+			</tr>
+			
+			{% endif %}
+
+			</tbody>
+
+		</table>
 
 	</div>
 
@@ -33,8 +77,4 @@
 	</div>
 
 </div>
-{% endblock %}
-
-{% block additional_scripts %}
-<script src="{{ url_for('static', filename='view-posts.js')}}"></script>
 {% endblock %}

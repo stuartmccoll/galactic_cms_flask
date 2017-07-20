@@ -248,8 +248,12 @@
 
 
 
-.btn-delete-post {
+.btn-delete-post, .btn-confirm-delete-post {
   background-color: #EA5455;
+}
+
+.btn-modal-cancel {
+  background-color: #BB5455;
 }
 
 .btn-edit-post {
@@ -260,7 +264,7 @@
   background-color: #CE9FFC;
 }
 
-.btn-delete-post, .btn-edit-post, .btn-view-post {
+.btn-delete-post, .btn-confirm-delete-post, .btn-edit-post, .btn-view-post, .btn-modal-cancel {
   font-weight: bold;
   color: #fff;
   border: none;
@@ -340,4 +344,9 @@
 
 a:hover {
   text-decoration: none;
+}
+
+.modal-header-delete {
+  background-color: #EA5455;
+  color: #FFFFFF;
 }

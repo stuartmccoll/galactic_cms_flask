@@ -73,9 +73,18 @@ $("#update-settings-submit").on("click", function(e) {
     }
 });
 
-$(".btn-delete-post").on("click", function() {
+$(".btn-delete-post").on("click", function () {
+     var post_id = event.target.id.toString().replace("delete-post-", "");
+     $(".modal-body").attr("id", post_id);
+     $(".modal-header").addClass("modal-header-delete");
+     $(".modal-title").text("Delete Post");
+     $(".modal-body").text("Are you sure you want to delete this post?");
+     $(".modal-footer").html("<button class='btn-modal-cancel' data-dismiss='modal'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span> Cancel</button> <button class='btn-confirm-delete-post' data-dismiss='modal'><span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Confirm Delete</button>");
+});
 
-    var post_id = event.target.id.toString().replace("delete-post-", "");
+$(".modal-footer").on("click", ".btn-confirm-delete-post", function() {
+
+    var post_id = $(".modal-body").attr("id");
     
     $.ajax({
         type: "GET",
@@ -92,8 +101,16 @@ $(".btn-delete-post").on("click", function() {
         error: function(response) {
             displayNotification("failure", "Error occurred when", "deleting blog post", 5000, 1000);
         } 
-    })
+    });
 
+});
+
+$(".modal").on("hidden.bs.modal", function(){
+    $(".modal-body").attr("id", "");
+    $(".modal-header").removeClass().addClass("modal-header");
+    $(".modal-title").text("");
+    $(".modal-body").text("");
+    $(".modal-footer").empty();
 });
 
 function displayNotification(type, message1, message2, timer1, timer2) {

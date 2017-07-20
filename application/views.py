@@ -4,7 +4,7 @@ from flask_login import LoginManager, login_user, logout_user, \
                         login_required, current_user
 
 from init_app import app, db, logger
-from models.post import Posts, posts_schema
+from models.post import Posts
 from models.user import User
 from models.user_profile import UserProfile
 
@@ -77,22 +77,15 @@ def create_post():
 @app.route('/view-posts')
 @login_required
 def view_posts():
+    posts = db.session.query(Posts) \
+              .filter_by(user_id=current_user.get_id()) \
+              .order_by(Posts.date_posted.desc())
     logger.info('Retrieving View Posts screen for user %s'
                 % current_user.get_id())
-    return render_template('view-posts.html')
+    return render_template('view-posts.html', posts=posts)
 
 
-@app.route('/get-posts')
-@login_required
-def get_posts():
-    logger.info('Processing get-posts request for user %s'
-                % current_user.get_id())
-    results = db.session.query(Posts) \
-        .filter_by(user_id=current_user.get_id()).all()
-    return posts_schema.jsonify(results)
-
-
-@app.route('/<id>')
+@app.route('/post/<id>')
 def view_post(id):
     post = db.session.query(Posts).filter_by(id=id).first()
     return render_template('post.html', post=post)
