@@ -8,7 +8,7 @@ $("#create-post-submit").on("click", function(e) {
     } else {
         $.ajax({
             type: "POST",
-            url: "/create-post",
+            url: "/admin/create-post",
             data: $("#create-post").serialize(),
             success: function(response) {
                 // Handle success response here
@@ -34,7 +34,7 @@ $("#update-post-submit").on("click", function(e) {
     } else {
         $.ajax({
             type: "POST",
-            url: "/edit-post/"+post_id,
+            url: "/admin/edit-post/"+post_id,
             data: $("#update-post").serialize(),
             success: function(response) {
                 // Handle success response here
@@ -59,7 +59,7 @@ $("#update-settings-submit").on("click", function(e) {
     } else {
         $.ajax({
             type: "POST",
-            url: "/user-settings",
+            url: "/admin/user-settings",
             data: $("#user-settings").serialize(),
             success: function(response) {
                 // Handle success response here
@@ -88,7 +88,7 @@ $(".modal-footer").on("click", ".btn-confirm-delete-post", function() {
     
     $.ajax({
         type: "GET",
-        url: "/delete-post/" + post_id,
+        url: "/admin/delete-post/" + post_id,
         success: function(response) {
             // Obtain the class name of the relevant row then remove it from the table
             console.log(response);

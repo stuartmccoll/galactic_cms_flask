@@ -21,7 +21,7 @@ def load_user(user_id):
     return user
 
 
-@app.route('/admin')
+@app.route('/admin/dashboard')
 @login_required
 def show_admin():
     posts = db.session.query(Posts) \
@@ -48,14 +48,14 @@ def show_login():
         if user and User.validate_login(user.password, str(password)):
             login_user(user)
             logger.info('Login successful for user %s' % username)
-            return redirect('/admin')
+            return redirect('/admin/dashboard')
         flash("Invalid login credentials provided\nPlease try again",
               category='error')
         logger.error('Login failed for username %s' % username)
         return render_template('login.html')
 
 
-@app.route('/create-post', methods=['GET', 'POST'])
+@app.route('/admin/create-post', methods=['GET', 'POST'])
 @login_required
 def create_post():
     if request.method == 'GET':
@@ -74,7 +74,7 @@ def create_post():
         return 'Post created successfully', 200
 
 
-@app.route('/view-posts')
+@app.route('/admin/view-posts')
 @login_required
 def view_posts():
     posts = db.session.query(Posts) \
@@ -91,7 +91,7 @@ def view_post(id):
     return render_template('post.html', post=post)
 
 
-@app.route('/delete-post/<id>')
+@app.route('/admin/delete-post/<id>')
 @login_required
 def delete_post(id):
     logger.info('Processing delete-post request for user %s and post %s'
@@ -103,7 +103,7 @@ def delete_post(id):
     return 'Post deleted successfully', 200
 
 
-@app.route('/edit-post/<id>', methods=['GET', 'POST'])
+@app.route('/admin/edit-post/<id>', methods=['GET', 'POST'])
 @login_required
 def edit_post(id):
     returned_post = db.session.query(Posts) \
@@ -122,7 +122,7 @@ def edit_post(id):
         return 'Post updated successfully', 200
 
 
-@app.route('/user-settings', methods=['GET', 'POST'])
+@app.route('/admin/user-settings', methods=['GET', 'POST'])
 @login_required
 def user_settings():
     user = User.query.filter_by(id=current_user.get_id()).first()
@@ -150,25 +150,25 @@ def user_settings():
                                last_name=user_profile.last_name)
 
 
-@app.route('/site-config')
+@app.route('/admin/site-config')
 @login_required
 def site_config():
     return render_template('site-configuration.html')
 
 
-@app.route('/raise-support-ticket')
+@app.route('/admin/raise-support-ticket')
 @login_required
 def raise_support_ticket():
     return render_template('raise-support-ticket.html')
 
 
-@app.route('/help')
+@app.route('/admin/help')
 @login_required
 def show_help():
     return render_template('help.html')
 
 
-@app.route('/sign-out')
+@app.route('/admin/sign-out')
 @login_required
 def sign_out():
     logout_user()
