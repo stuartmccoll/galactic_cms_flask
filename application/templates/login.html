@@ -25,7 +25,9 @@
 
             <div class="col-sm-4 login-container">
 
-                <h1>Galactic CMS</h1>
+                <p class="text-center">
+                    <img src="{{ url_for('static', filename='logo.png') }}" />
+                </p>
 
                 <form id="login-form" action="login" method="post">
 
@@ -48,7 +50,7 @@
                     <div class="form-group">
 
                         <!--<button id="login-submit" class="button-positive">Login</button>-->
-                        <input type="submit" value="Login" />
+                        <input id="login-submit" class="button-positive" type="submit" value="Login" />
 
                     </div>
 
