@@ -316,7 +316,7 @@
   background-color: none;
 }
 
-#login-username, #login-password {
+.form-login {
   background-color: rgba(255, 255, 255, 0);
   border: none;
   border-radius: 0px;

@@ -7,6 +7,7 @@ from init_app import app, db, logger
 from models.post import Posts
 from models.user import User
 from models.user_profile import UserProfile
+from forms.login import LoginForm
 
 
 login_manager = LoginManager()
@@ -37,22 +38,20 @@ def show_admin():
 
 @app.route('/login', methods=['GET', 'POST'])
 def show_login():
+    form = LoginForm()
     if request.method == 'GET':
         logger.info('Retrieving login screen')
-        return render_template('login.html')
+        return render_template('login.html', form=form)
     if request.method == 'POST':
-        username = request.form['login-username']
-        password = request.form['login-password']
-        user = User.query.filter_by(username=username).first()
-        logger.info('Attempted login for user %s' % username)
-        if user and User.validate_login(user.password, str(password)):
-            login_user(user)
-            logger.info('Login successful for user %s' % username)
+        logger.info('Attempting login for user %s' % form.username.data)
+        if form.validate_on_submit():
+            login_user(form.user)
+            logger.info('Login successful for user %s' % form.user.username)
             return redirect('/admin/dashboard')
         flash("Invalid login credentials provided\nPlease try again",
               category='error')
-        logger.error('Login failed for username %s' % username)
-        return render_template('login.html')
+        logger.error('Login failed for username %s' % form.username.data)
+        return render_template('login.html', form=form)
 
 
 @app.route('/admin/create-post', methods=['GET', 'POST'])

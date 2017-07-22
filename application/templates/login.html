@@ -33,23 +33,21 @@
 
                     <div class="form-group">
 
-                        <label for="login-username">Username</label>
-
-                        <input type="text" class="form-control" name="login-username" id="login-username" />
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="login-password">Password</label>
-
-                        <input type="password" class="form-control" name="login-password" id="login-password" />
+                        {{ form.username.label }}
+                        {{ form.username(size=20, class_="form-control form-login") }}
 
                     </div>
 
                     <div class="form-group">
 
-                        <!--<button id="login-submit" class="button-positive">Login</button>-->
+                        {{ form.password.label }}
+                        {{ form.password(class_="form-control form-login") }}
+
+                    </div>
+
+                    <div class="form-group">
+
+                        {{ form.csrf_token }}
                         <input id="login-submit" class="button-positive" type="submit" value="Login" />
 
                     </div>
