@@ -7,8 +7,9 @@ from init_app import app, db, logger
 from models.post import Posts
 from models.user import User
 from models.user_profile import UserProfile
+from forms.post import PostForm
 from forms.login import LoginForm
-from forms.create_post import PostForm
+from forms.user_settings import UserSettingsForm
 
 
 login_manager = LoginManager()
@@ -131,29 +132,31 @@ def edit_post(id):
 @app.route('/admin/user-settings', methods=['GET', 'POST'])
 @login_required
 def user_settings():
+    form = UserSettingsForm()
     user = User.query.filter_by(id=current_user.get_id()).first()
     user_profile = UserProfile.query.filter_by(id=user.user_profile_id).first()
     if request.method == 'POST':
-        if not user_profile:
-            logger.info('Creating new user settings for user %s'
-                        % current_user.get_id())
-            user_profile = UserProfile(id=current_user.get_id(),
-                                       first_name=request.form['first-name'],
-                                       last_name=request.form['last-name'])
-        if user_profile:
-            logger.info('Updating user settings for user %s'
-                        % current_user.get_id())
-            user_profile.first_name = request.form['first-name']
-            user_profile.last_name = request.form['last-name']
-        db.session.add(user_profile)
-        db.session.commit()
-        return 'User settings updated successfully', 200
+        if form.validate_on_submit():
+            if not user_profile:
+                logger.info('Creating new user settings for user %s'
+                            % current_user.get_id())
+                user_profile = UserProfile(id=current_user.get_id(),
+                                           first_name=form.first_name.data,
+                                           last_name=form.last_name.data)
+            if user_profile:
+                logger.info('Updating user settings for user %s'
+                            % current_user.get_id())
+                user_profile.first_name = form.first_name.data
+                user_profile.last_name = form.last_name.data
+            db.session.add(user_profile)
+            db.session.commit()
+            return 'User settings updated successfully', 200
     if request.method == 'GET':
         logger.info('Retrieving User Settings screen for user %s'
                     % current_user.get_id())
-        return render_template('user-settings.html',
-                               first_name=user_profile.first_name,
-                               last_name=user_profile.last_name)
+        form.first_name.data = user_profile.first_name
+        form.last_name.data = user_profile.last_name
+        return render_template('user-settings.html', form=form)
 
 
 @app.route('/admin/site-config')
