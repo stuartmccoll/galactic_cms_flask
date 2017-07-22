@@ -12,8 +12,7 @@ $("#create-post-submit").on("click", function(e) {
             data: $("#create-post").serialize(),
             success: function(response) {
                 // Handle success response here
-                $("#post-title").val("");
-                $("#post-content").val("");
+                $(".form-control").val("");
                 displayNotification("success", "Blog post", "created successfully", 5000, 1000);
             },
             error: function(response) {
@@ -71,6 +70,13 @@ $("#update-settings-submit").on("click", function(e) {
             }
         });
     }
+});
+
+$(".btn-edit-post").on("click", function() {
+
+    var post_id = event.target.id.toString().replace("edit-post-", "");
+    window.location.href = "/admin/edit-post/"+post_id;
+
 });
 
 $(".btn-delete-post").on("click", function () {

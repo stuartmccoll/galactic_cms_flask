@@ -12,20 +12,27 @@
 
 		<div class="form-group">
 
-			<label for="post-title">Title</label>
-			<input type="text" class="form-control" id="post-title" name="post-title" placeholder="Title" />
+			{{ form.title.label }}
+			{{ form.title(class_="form-control") }}
+
+			<!-- <label for="post-title">Title</label>
+			<input type="text" class="form-control" id="post-title" name="post-title" placeholder="Title" /> -->
 
 		</div>
 
 		<div class="form-group">
 
-			<label for="post-content">Content</label>
-			<textarea rows="25" class="form-control" id="post-content" name="post-content" placeholder="Post content."></textarea>
+			{{ form.content.label }}
+            {{ form.content(rows="25", class_="form-control") }}
+
+			<!-- <label for="post-content">Content</label>
+			<textarea rows="25" class="form-control" id="post-content" name="post-content" placeholder="Post content."></textarea> -->
 
 		</div>
 
 		<div class="form-group">
 
+			{{ form.csrf_token }}
 			<button id="create-post-submit" class="button-positive">Create Post</button>
 
 		</div>

@@ -8,6 +8,7 @@ from models.post import Posts
 from models.user import User
 from models.user_profile import UserProfile
 from forms.login import LoginForm
+from forms.create_post import PostForm
 
 
 login_manager = LoginManager()
@@ -57,20 +58,23 @@ def show_login():
 @app.route('/admin/create-post', methods=['GET', 'POST'])
 @login_required
 def create_post():
+    form = PostForm()
     if request.method == 'GET':
         logger.info('Retrieving Create New Post screen for user %s'
                     % current_user.get_id())
-        return render_template('create-post.html')
+        return render_template('create-post.html', form=form)
     if request.method == 'POST':
-        post = Posts(title=request.form['post-title'],
-                     content=request.form['post-content'],
-                     date_posted=datetime.now(),
-                     user_id=current_user.get_id())
-        logger.info('Creating a New Post with the title "%s" for user %s'
-                    % (request.form['post-title'], current_user.get_id()))
-        db.session.add(post)
-        db.session.commit()
-        return 'Post created successfully', 200
+        if form.validate_on_submit():
+            post = Posts(title=form.title.data,
+                         content=form.content.data,
+                         date_posted=datetime.now(),
+                         user_id=current_user.get_id())
+            logger.info('Creating a New Post with the title "%s" for user %s'
+                        % (form.title.data, current_user.get_id()))
+            db.session.add(post)
+            db.session.commit()
+            return 'Post created successfully', 200
+        logger.error('Create Post failed for user %s' % current_user.get_id())
 
 
 @app.route('/admin/view-posts')
@@ -105,20 +109,23 @@ def delete_post(id):
 @app.route('/admin/edit-post/<id>', methods=['GET', 'POST'])
 @login_required
 def edit_post(id):
+    form = PostForm()
     returned_post = db.session.query(Posts) \
-                    .filter_by(id=id, user_id=current_user.get_id()).first()
+        .filter_by(id=id, user_id=current_user.get_id()).first()
     if request.method == 'GET':
         logger.info('Retrieving Edit Post screen for user %s and post %s' %
                     (current_user.get_id(), id))
-        return render_template('edit-post.html', title=returned_post.title,
-                               content=returned_post.content, id=id)
+        form.title.data = returned_post.title
+        form.content.data = returned_post.content
+        return render_template('edit-post.html', id=id, form=form)
     if request.method == 'POST':
-        returned_post.title = request.form['post-title']
-        returned_post.content = request.form['post-content']
-        logger.info('Updating post %s for user %s' %
-                    (id, current_user.get_id()))
-        db.session.commit()
-        return 'Post updated successfully', 200
+        if form.validate_on_submit():
+            returned_post.title = form.title.data
+            returned_post.content = form.content.data
+            logger.info('Updating post %s for user %s' %
+                        (id, current_user.get_id()))
+            db.session.commit()
+            return 'Post updated successfully', 200
 
 
 @app.route('/admin/user-settings', methods=['GET', 'POST'])
