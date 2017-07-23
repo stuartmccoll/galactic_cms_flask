@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  
+	<h1 class="page-header">
+	  <span>Edit Post</span>
+	</h1>
+
+	<form id="update-post" method="post">
+
+		<div class="form-group">
+
+			{{ form.title.label }}
+			{{ form.title(class_="form-control") }}
+
+		</div>
+
+		<div class="form-group">
+
+			{{ form.content.label }}
+            {{ form.content(rows="25", class_="form-control") }}
+
+		</div>
+
+		<div class="form-group">
+
+			{{ form.csrf_token }}
+            <input type="hidden" id="hidden-id" value="{{ id }}" />
+			<button id="update-post-submit" class="button-positive">Update Post</button>
+
+		</div>
+
+	</form>
+
+	<div class="row notification-wrapper">
+
+		<div class="col-sm-12 notification-success">
+
+			<p><span class="success-message-1"></span></p>
+			<p><span class="success-message-2"></span></p>
+
+		</div>
+
+		<div class="col-sm-12 notification-failure">
+
+			<p><span class="failure-message-1"></span></p>
+			<p><span class="failure-message-2"></span></p>
+
+		</div>
+
+	</div>
+
+</div>
+{% endblock %}

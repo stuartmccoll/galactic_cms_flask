@@ -1,0 +1,12 @@
+coverage
+flask==0.12
+flask_login
+flask_marshmallow
+flask_migrate
+flask_script
+flask_sqlalchemy
+flask_wtf
+marshmallow_sqlalchemy
+nose
+psycopg2
+wtforms

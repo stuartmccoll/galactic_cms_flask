@@ -1,0 +1,87 @@
+<!doctype html>
+
+<html>
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Galactic CMS</title>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+    </head>
+
+    <body>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <div class="sidebar-heading">
+                        <p class="text-center">
+                            <img src="{{ url_for('static', filename='logo.png') }}" />
+                        </p>
+                    </div>
+                    <ul class="nav nav-sidebar">
+                        {% set sidebar = [
+                            (url_for('show_admin'), "dashboard", "Dashboard"),
+                            (url_for('create_post'), "create_post", "Create New Post"),
+                            (url_for('view_posts'), "view_posts", "View Posts"),
+                            (url_for('user_settings'), "user_settings", "User Settings"),
+                            (url_for('site_config'), "site_config", "Site Configuration"),
+                            (url_for('raise_support_ticket'), "raise_support_ticket", "Raise Support Ticket"),
+                            (url_for('show_help'), "show_help", "Help")
+                        ] -%}
+
+                        {% set active_page = active_page|default('dashboard') -%}
+
+                        {% for href, id, caption in sidebar %}
+                        <li {% if id == active_page %} class="active"{% endif %}><a href="{{ href|e }}">{{ caption|e }}</a></li>
+                        {% endfor %}
+                        
+                        <li><a href="{{ url_for('sign_out') }}">Sign Out</a></li>
+                    </ul>
+                    <div class="beta-wrapper">
+                        <p>
+                            <span>beta</span>
+                        </p>
+                    </div>
+                </div>
+
+            {% block content %}
+            {% endblock %}
+
+            <div class="modal fade" id="galactic-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <p></p>
+                        </div>
+                        <div class="modal-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <script src="{{ url_for('static', filename='script.js')}}"></script>
+        {% block additional_scripts %}
+        {% endblock %}
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    </body>
+
+</html>

@@ -1,0 +1,18 @@
+version: '2'
+services:
+  galactic-cms:
+    container_name: "galactic-cms"
+    build: .
+    working_dir: "/app"
+    ports:
+     - "5000:5000"
+    volumes:
+     - ./:/app
+    depends_on:
+    - database
+  database:
+    container_name: "db-galactic-cms"
+    image: postgres:9
+    env_file: .env
+    expose:
+      - 5432

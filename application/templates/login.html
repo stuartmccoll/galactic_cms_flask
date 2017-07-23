@@ -1,0 +1,100 @@
+<!doctype html>
+
+<html class="login-body">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Galactic CMS</title>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}" />
+
+    </head>
+
+    <body class="login-body">
+
+    <div class="container-fluid full-height">
+
+        <div class="row full-height vertical-center">
+
+            <div class="col-sm-4 login-container">
+
+                <p class="text-center">
+                    <img src="{{ url_for('static', filename='logo.png') }}" />
+                </p>
+
+                <form id="login-form" action="login" method="post">
+
+                    <div class="form-group">
+
+                        {{ form.username.label }}
+                        {{ form.username(size=20, class_="form-control form-login") }}
+
+                    </div>
+
+                    <div class="form-group">
+
+                        {{ form.password.label }}
+                        {{ form.password(class_="form-control form-login") }}
+
+                    </div>
+
+                    <div class="form-group">
+
+                        {{ form.csrf_token }}
+                        <input id="login-submit" class="button-positive" type="submit" value="Login" />
+
+                    </div>
+
+                    </div>
+
+
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="row notification-wrapper">
+
+                        <div class="col-sm-12 notification-failure">
+
+                            <p><span class="failure-message-1">{{ message.split('\n')[0] }}</span></p>
+                            <p><span class="failure-message-2">{{ message.split('\n')[1] }}</span></p>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+    </div>
+
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <script src="{{ url_for('static', filename='login.js')}}"></script>
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    </body>
+
+</html>
