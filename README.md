@@ -1,5 +1,5 @@
 # Galactic CMS
-A lightweight content management built using Python, Flask and Postgres.
+A lightweight content management system built using Python, Flask and Postgres.
 
 # Installation
 Build the Docker images using the following command within the root directory:
