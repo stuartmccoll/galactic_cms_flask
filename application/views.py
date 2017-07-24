@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import render_template, request, redirect, flash
 from flask_login import LoginManager, login_user, logout_user, \
                         login_required, current_user
+import os
 
 from init_app import app, db, logger
 from models.post import Posts
@@ -24,6 +25,11 @@ def load_user(user_id):
     return user
 
 
+@app.route('/')
+def show_home():
+    return render_template('themes/active/index.html')
+
+
 @app.route('/admin/dashboard')
 @login_required
 def show_admin():
@@ -34,8 +40,23 @@ def show_admin():
     user_profile = UserProfile.query.filter_by(id=user.user_profile_id) \
         .first()
     logger.info('Retrieving administrator dashboard for user_id: %s' % user.id)
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    logger.info('Current directory path is %s' % dir_path)
+    if dir_path == '/app/application':
+        logger.info('Checking that themes directory exists for user \
+                     %s' % user.id)
+        if os.path.exists(dir_path + '/templates/themes'):
+            logger.info('Checking that themes exist for user %s' % user.id)
+            themes = os.listdir(dir_path + '/templates/themes')
+            logger.info('Found the following themes for user %s: \
+                         %s' % (user.id, themes))
+            # For each directory in themes
+            # read in the theme's config file
+            # and then add the theme_name to
+            # a dictionary (as well other relevant
+            # information)
     return render_template('admin.html', all_posts=posts,
-                           user=user, user_profile=user_profile)
+                           user=user, user_profile=user_profile, themes=themes)
 
 
 @app.route('/login', methods=['GET', 'POST'])
