@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import render_template, request, redirect, flash
 from flask_login import LoginManager, login_user, logout_user, \
                         login_required, current_user
+import json
 import os
 
 from init_app import app, db, logger
@@ -47,14 +48,32 @@ def show_admin():
                      %s' % user.id)
         if os.path.exists(dir_path + '/templates/themes'):
             logger.info('Checking that themes exist for user %s' % user.id)
-            themes = os.listdir(dir_path + '/templates/themes')
+            themes = os.walk(dir_path + '/templates/themes').next()[1]
             logger.info('Found the following themes for user %s: \
                          %s' % (user.id, themes))
-            # For each directory in themes
-            # read in the theme's config file
-            # and then add the theme_name to
-            # a dictionary (as well other relevant
-            # information)
+
+            theme_dict = {}
+
+            for theme in themes:
+                logger.info('Checking that theme folder %s has a config.json file' % theme)
+
+                theme_with_config = os.path.exists(dir_path + '/templates/themes/' + theme + '/config.json')
+                if theme_with_config:
+                    logger.info('Found config.json file for theme folder %s' % theme)
+
+                    theme_dict[str(theme)] = {}
+
+                    with open(dir_path + '/templates/themes/' + theme + '/config.json') as theme_config:
+                        data = json.load(theme_config)
+                        logger.info(data['theme']['name'])
+                        theme_dict[str(theme)]['name'] = data['theme']['name']
+                        theme_dict[str(theme)]['description'] = data['theme']['description']
+                        theme_dict[str(theme)]['author'] = data['theme']['author']
+                        theme_dict[str(theme)]['author-url'] = data['theme']['author-url']
+
+                else:
+                    logger.info('Did not find config.json file for theme folder %s' % theme)
+
     return render_template('admin.html', all_posts=posts,
                            user=user, user_profile=user_profile, themes=themes)
 
