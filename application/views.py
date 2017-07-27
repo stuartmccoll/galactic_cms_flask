@@ -41,41 +41,9 @@ def show_admin():
     user_profile = UserProfile.query.filter_by(id=user.user_profile_id) \
         .first()
     logger.info('Retrieving administrator dashboard for user_id: %s' % user.id)
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    logger.info('Current directory path is %s' % dir_path)
-    if dir_path == '/app/application':
-        logger.info('Checking that themes directory exists for user \
-                     %s' % user.id)
-        if os.path.exists(dir_path + '/templates/themes'):
-            logger.info('Checking that themes exist for user %s' % user.id)
-            themes = os.walk(dir_path + '/templates/themes').next()[1]
-            logger.info('Found the following themes for user %s: \
-                         %s' % (user.id, themes))
-
-            theme_dict = {}
-
-            for theme in themes:
-                logger.info('Checking that theme folder %s has a config.json file' % theme)
-
-                theme_with_config = os.path.exists(dir_path + '/templates/themes/' + theme + '/config.json')
-                if theme_with_config:
-                    logger.info('Found config.json file for theme folder %s' % theme)
-
-                    theme_dict[str(theme)] = {}
-
-                    with open(dir_path + '/templates/themes/' + theme + '/config.json') as theme_config:
-                        data = json.load(theme_config)
-                        logger.info(data['theme']['name'])
-                        theme_dict[str(theme)]['name'] = data['theme']['name']
-                        theme_dict[str(theme)]['description'] = data['theme']['description']
-                        theme_dict[str(theme)]['author'] = data['theme']['author']
-                        theme_dict[str(theme)]['author-url'] = data['theme']['author-url']
-
-                else:
-                    logger.info('Did not find config.json file for theme folder %s' % theme)
 
     return render_template('admin.html', all_posts=posts,
-                           user=user, user_profile=user_profile, themes=themes)
+                           user=user, user_profile=user_profile)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -202,7 +170,43 @@ def user_settings():
 @app.route('/admin/site-config')
 @login_required
 def site_config():
-    return render_template('site-configuration.html')
+
+    user = User.query.filter_by(id=current_user.get_id()).first()
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    logger.info('Current directory path is %s' % dir_path)
+    if dir_path == '/app/application':
+        logger.info('Checking that themes directory exists for user \
+                     %s' % user.id)
+        if os.path.exists(dir_path + '/templates/themes'):
+            logger.info('Checking that themes exist for user %s' % user.id)
+            themes = os.walk(dir_path + '/templates/themes').next()[1]
+            logger.info('Found the following themes for user %s: \
+                         %s' % (user.id, themes))
+
+            theme_dict = {}
+
+            for theme in themes:
+                logger.info('Checking that theme folder %s has a config.json file' % theme)
+
+                theme_with_config = os.path.exists(dir_path + '/templates/themes/' + theme + '/config.json')
+                if theme_with_config:
+                    logger.info('Found config.json file for theme folder %s' % theme)
+
+                    theme_dict[str(theme)] = {}
+
+                    with open(dir_path + '/templates/themes/' + theme + '/config.json') as theme_config:
+                        data = json.load(theme_config)
+                        logger.info(data['theme']['name'])
+                        theme_dict[theme]['name'] = data['theme']['name']
+                        theme_dict[theme]['description'] = data['theme']['description']
+                        theme_dict[theme]['author'] = data['theme']['author']
+                        theme_dict[theme]['author_website'] = data['theme']['author-website']
+
+                else:
+                    logger.info('Did not find config.json file for theme folder %s' % theme)
+
+    return render_template('site-configuration.html', themes=theme_dict)
 
 
 @app.route('/admin/raise-support-ticket')
