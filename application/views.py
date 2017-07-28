@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, request, redirect, flash
+from flask import render_template, request, redirect, flash, jsonify
 from flask_login import LoginManager, login_user, logout_user, \
                         login_required, current_user
 import json
@@ -205,12 +205,53 @@ def site_config():
                         theme_dict[theme]['description'] = data['theme']['description']
                         theme_dict[theme]['author'] = data['theme']['author']
                         theme_dict[theme]['author_website'] = data['theme']['author-website']
+                        theme_dict[theme]['config_name'] = theme
 
                 else:
                     logger.info('Did not find config.json file \
                                 for theme folder %s' % theme)
 
     return render_template('site-configuration.html', themes=theme_dict)
+
+
+@app.route('/admin/themes/activate/<theme_name>')
+@login_required
+def activate_theme(theme_name):
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    user = User.query.filter_by(id=current_user.get_id()).first()
+
+    if check_working_directory():
+        logger.info('Checking that themes directory exists for user \
+                     %s' % user.id)
+        if os.path.exists(dir_path + '/templates/themes'):
+
+            # Get config.json for active theme
+            get_config = os.path.exists(dir_path + '/templates/themes/active/config.json')
+            if get_config:
+                # Load config.json
+                with open(dir_path + '/templates/themes/active/config.json') as theme_config:
+                    data = json.load(theme_config)
+                    os.rename(dir_path + '/templates/themes/active', dir_path + '/templates/themes/' + data['theme']['name'])
+
+            # Get config.json for theme to activate
+            get_config = os.path.exists(dir_path + '/templates/themes/' + theme_name + 'config.json')
+            if get_config:
+                # Load config.json
+                with open(dir_path + '/templates/themes/' + theme_name + 'config.json') as theme_config:
+                    data = json.load(theme_config)
+                    os.rename(dir_path + '/templates/themes/' + theme_name, dir_path + '/templates/themes/active')
+
+
+    return jsonify({"status": "success"}), 200
+
+
+def check_working_directory():
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    logger.info('Current directory path is %s' % dir_path)
+    if dir_path == '/app/application':
+        return True
+    return False
 
 
 @app.route('/admin/raise-support-ticket')
