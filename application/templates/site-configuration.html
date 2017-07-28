@@ -23,9 +23,9 @@
             <td> {{ theme.description }}</td>
             <td><a href="{{ theme.author_website }}">{{ theme.author }}</a></td>
             {% if item == "active" %}
-              <td>Active Theme</td>
+              <td><button class='btn-view-post btn-disabled' disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Currently Active</button></td>
             {% else %}
-              <td>Activate {{ item }}</td>
+              <td><button class='btn-view-post'><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Activate</button></td>
             {% endif %}
           {% endfor %}
         </tr>

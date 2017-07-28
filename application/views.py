@@ -187,15 +187,18 @@ def site_config():
             theme_dict = {}
 
             for theme in themes:
-                logger.info('Checking that theme folder %s has a config.json file' % theme)
+                logger.info('Checking that theme folder %s has a\
+                             config.json file' % theme)
 
                 theme_with_config = os.path.exists(dir_path + '/templates/themes/' + theme + '/config.json')
                 if theme_with_config:
-                    logger.info('Found config.json file for theme folder %s' % theme)
+                    logger.info('Found config.json file for theme folder %s'
+                                % theme)
 
                     theme_dict[str(theme)] = {}
 
-                    with open(dir_path + '/templates/themes/' + theme + '/config.json') as theme_config:
+                    with open(dir_path + '/templates/themes/' + theme
+                              + '/config.json') as theme_config:
                         data = json.load(theme_config)
                         logger.info(data['theme']['name'])
                         theme_dict[theme]['name'] = data['theme']['name']
@@ -204,7 +207,8 @@ def site_config():
                         theme_dict[theme]['author_website'] = data['theme']['author-website']
 
                 else:
-                    logger.info('Did not find config.json file for theme folder %s' % theme)
+                    logger.info('Did not find config.json file \
+                                for theme folder %s' % theme)
 
     return render_template('site-configuration.html', themes=theme_dict)
 
