@@ -72,6 +72,38 @@ $("#update-settings-submit").on("click", function(e) {
     }
 });
 
+$(".theme-activate").on("click", function(e) {
+
+    e.preventDefault();
+
+    var theme_name = $(this).parent().prop('className').replace("theme-", "");
+
+    $.ajax({
+        type: "POST",
+        url: "/admin/themes/activate/" + theme_name,
+        success: function(response) {
+            sessionStorage.notification = "success";
+            location.reload();
+        },
+        error: function(response) {
+            sessionStorage.notification = "error";
+            location.reload();
+            // Handle error response here
+        }
+    });
+
+});
+
+$(function() {
+    if ( sessionStorage.notification === "success" ) {
+        displayNotification("success", "Theme has been", "activated successfully", 5000, 1000);
+        sessionStorage.notification = "";
+    } else if (sessionStorage.notification === "error") {
+        displayNotification("failure", "Error occured when", "activating theme", 5000, 1000);
+        sessionStorage.notification = "";
+    }
+});
+
 $(".btn-edit-post").on("click", function() {
 
     var post_id = event.target.id.toString().replace("edit-post-", "");

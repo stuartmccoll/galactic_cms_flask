@@ -242,6 +242,19 @@
   padding: 10px;
 }
 
+.button-table-positive {
+  background-color: #7367F0;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  width: 100%;
+}
+
+.button-table-positive:disabled {
+  color: #9997F0;
+}
+
 .button-positive:disabled {
   color: #9997F0;
 }
@@ -358,4 +371,8 @@ a:hover {
 .modal-header-delete {
   background-color: #EA5455;
   color: #FFFFFF;
+}
+
+.themes-table > tbody > tr > td {
+     vertical-align: middle;
 }

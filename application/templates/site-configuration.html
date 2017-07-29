@@ -7,7 +7,7 @@
       <span>Site Configuration</span>
     </h1>
 
-    <table class="table table-striped">
+    <table class="table table-striped themes-table">
 
       <thead>
         <th>Theme Name</th>
@@ -16,22 +16,42 @@
         <th>Activation</th>
       </thead>
 
-      {% for item in themes %}
+      {% for key, theme in themes.items() %}
         <tr>
-          {% for key, theme in themes.items() %}
-            <td> {{ theme.name }}</td>
-            <td> {{ theme.description }}</td>
-            <td><a href="{{ theme.author_website }}">{{ theme.author }}</a></td>
-            {% if item == "active" %}
-              <td><button class='button-positive' disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Currently Active</button></td>
-            {% else %}
-              <td><button class='button-positive'><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Activate</button></td>
-            {% endif %}
-          {% endfor %}
+          <td> {{ theme.name }}</td>
+          <td> {{ theme.description }}</td>
+          <td><a href="{{ theme.author_website }}">{{ theme.author }}</a></td>
+          {% if theme.active == True %}
+            <td class="theme-{{ theme.directory_name }}">
+              <button class='button-table-positive theme-activate' disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Currently Active</button>
+            </td>
+          {% else %}
+            <td class="theme-{{ theme.directory_name }}">
+              <button class='button-table-positive theme-activate'><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Activate</button>
+            </td>
+          {% endif %}  
         </tr>
-      {% endfor %}
+      {% endfor %} 
 
     </table>
+
+    <div class="row notification-wrapper">
+
+      <div class="col-sm-12 notification-success">
+
+        <p><span class="success-message-1"></span></p>
+        <p><span class="success-message-2"></span></p>
+
+      </div>
+
+      <div class="col-sm-12 notification-failure">
+
+        <p><span class="failure-message-1"></span></p>
+        <p><span class="failure-message-2"></span></p>
+
+      </div>
+
+    </div>
 
   </div>
 {% endblock %}
