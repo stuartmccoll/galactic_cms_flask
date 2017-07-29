@@ -25,38 +25,46 @@
 
             <div class="col-sm-4 login-container">
 
-                <p class="text-center">
-                    <img src="{{ url_for('static', filename='logo.png') }}" />
-                </p>
+                <div class="login-logo-wrapper">
 
-                <form id="login-form" action="login" method="post">
+                    <img class="img-responsive" src="{{ url_for('static', filename='login.png') }}" />
 
-                    <div class="form-group">
+                </div>
 
-                        {{ form.username.label }}
-                        {{ form.username(size=20, class_="form-control form-login") }}
+                <div class="login-form-wrapper">
+
+                    <div class="container-fluid">
+
+                        <form id="login-form" action="login" method="post">
+
+                            <div class="form-group">
+
+                                {{ form.username(size=20, class_="form-control form-login", required="required") }}
+                                {{ form.username.label }}
+                                <span class="bar"></span>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                {{ form.password(class_="form-control form-login", required="required") }}
+                                {{ form.password.label }}
+                                <span class="bar"></span>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                {{ form.csrf_token }}
+                                <input id="login-submit" class="button-positive" type="submit" value="Login" />
+
+                            </div>
+
+                        </form>
 
                     </div>
 
-                    <div class="form-group">
-
-                        {{ form.password.label }}
-                        {{ form.password(class_="form-control form-login") }}
-
-                    </div>
-
-                    <div class="form-group">
-
-                        {{ form.csrf_token }}
-                        <input id="login-submit" class="button-positive" type="submit" value="Login" />
-
-                    </div>
-
-                    </div>
-
-
-
-                </form>
+                </div>
 
             </div>
 

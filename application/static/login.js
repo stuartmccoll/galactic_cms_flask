@@ -2,6 +2,8 @@ $(document).ready(function(){
 
     if ($(".failure-message-1").text() == "Invalid login credentials provided") {
 
+        $(".form-control").val("");
+
         $(".notification-failure").css("display", "block");
     
         $(".notification-wrapper").css("display", "block");
