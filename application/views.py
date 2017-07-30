@@ -100,7 +100,15 @@ def view_posts():
 @app.route('/post/<id>')
 def view_post(id):
     post = db.session.query(Posts).filter_by(id=id).first()
-    return render_template('post.html', post=post)
+
+    response = json.loads(get_previous_post(post.id))
+    previous_post = response['previous_post']
+
+    response = json.loads(get_next_post(post.id))
+    next_post = response['next_post']
+
+    return render_template('post.html', post=post, previous_post=previous_post,
+                           next_post=next_post)
 
 
 @app.route('/admin/delete-post/<id>')
@@ -282,3 +290,21 @@ def sign_out():
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
+
+
+def get_next_post(current_post):
+    returned_post = Posts.query.filter(Posts.id > current_post).first()
+
+    if returned_post:
+        logger.info("next %s" % returned_post)
+        return json.dumps({"next_post": returned_post.id})
+    return json.dumps({"next_post": False})
+
+
+def get_previous_post(current_post):
+    returned_post = Posts.query.filter(Posts.id < current_post).first()
+
+    if returned_post:
+        logger.info("previous %s" % returned_post)
+        return json.dumps({"previous_post": returned_post.id})
+    return json.dumps({"previous_post": False})
