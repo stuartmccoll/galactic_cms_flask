@@ -168,6 +168,7 @@
 
 .notification-success p, .notification-failure p {
   text-align: right;
+  margin: 0 0 14px;
 }
 
 .notification-success span, .notification-failure span {
@@ -370,7 +371,7 @@
 #login-form input:focus ~ label, #login-form input:valid ~ label {
   top: -10px;
   font-size: 0.8em;
-  color:#5264AE;
+  color:#7367F0;
 }
 
 #login-form label {
@@ -397,7 +398,7 @@
   width:0;
   bottom:1px; 
   position:absolute;
-  background:#5264AE; 
+  background:#7367F0; 
   transition:0.2s ease all; 
   -moz-transition:0.2s ease all; 
   -webkit-transition:0.2s ease all;
