@@ -28,7 +28,10 @@ def load_user(user_id):
 
 @app.route('/')
 def show_home():
-    return render_template('themes/active/index.html')
+    response = json.loads(get_latest_post())
+    latest_post = response['latest_post']
+
+    return render_template('themes/active/index.html', latest_post=latest_post)
 
 
 @app.route('/admin/dashboard')
@@ -107,8 +110,11 @@ def view_post(id):
     response = json.loads(get_next_post(post.id))
     next_post = response['next_post']
 
+    response = json.loads(get_latest_post())
+    latest_post = response['latest_post']
+
     return render_template('post.html', post=post, previous_post=previous_post,
-                           next_post=next_post)
+                           next_post=next_post, latest_post=latest_post)
 
 
 @app.route('/admin/delete-post/<id>')
@@ -290,6 +296,11 @@ def sign_out():
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
+
+
+def get_latest_post():
+    returned_post = db.session.query(Posts).order_by(Posts.id.desc()).first()
+    return json.dumps({"latest_post": returned_post.id})
 
 
 def get_next_post(current_post):
