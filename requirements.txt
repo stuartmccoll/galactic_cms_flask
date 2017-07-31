@@ -9,4 +9,5 @@ flask_wtf
 marshmallow_sqlalchemy
 nose
 psycopg2
+pytest
 wtforms
