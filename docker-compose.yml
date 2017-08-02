@@ -10,6 +10,7 @@ services:
      - ./:/app
     depends_on:
     - database
+    entrypoint: ./wait-for-postgres.sh postgres 5432
   database:
     container_name: "db-galactic-cms"
     image: postgres:9
