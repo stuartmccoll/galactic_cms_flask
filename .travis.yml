@@ -6,11 +6,15 @@ services:
   - docker-compose
 
 before_script:
+# Let's stop postgresql
+  - sudo service postgresql stop
+  # wait for postgresql to shutdown
+  - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
   - docker-compose build galactic-cms
   - docker-compose up -d galactic-cms
 
 script:
-- docker ps
+- docker exec -it galactic-cms bash -c "pytest --cov-report term --cov"
 
 after_script:
 - docker-compose stop galactic-cms
