@@ -8,10 +8,9 @@ services:
 before_script:
   - docker-compose build galactic-cms
   - docker-compose up -d galactic-cms
-  - pip install -r requirements.txt
 
 script:
-- pytest --cov-report term --cov
+- docker-exec -it galactic-cms bash -c "pytest --cov-report term --cov"
 
 after_script:
 - docker-compose stop galactic-cms
