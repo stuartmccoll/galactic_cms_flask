@@ -11,7 +11,7 @@ services:
     depends_on:
     - database
     privileged: true
-    entrypoint: ./wait-for-postgres.sh postgres 5432
+    entrypoint: bash -c "./wait-for-postgres.sh postgres 5432"
   database:
     container_name: "db-galactic-cms"
     image: postgres:9
