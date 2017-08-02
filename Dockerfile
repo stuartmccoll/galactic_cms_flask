@@ -16,4 +16,4 @@ RUN ["chmod", "+x", "wait-for-postgres.sh"]
 # CMD [ "python", "-m", "flask", "run", "--host=0.0.0.0" ]
 CMD [ "python", "manage.py", "runserver", "-h=0.0.0.0", "-p=5000"]
 
-ENTRYPOINT ["wait-for-postgres.sh"]
+ENTRYPOINT ["./wait-for-postgres.sh"]
