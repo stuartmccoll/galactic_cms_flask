@@ -1,4 +1,3 @@
-coverage
 flask==0.12
 flask_login
 flask_marshmallow
@@ -10,4 +9,5 @@ marshmallow_sqlalchemy
 nose
 psycopg2
 pytest
+pytest-cov
 wtforms
