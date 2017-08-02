@@ -2,7 +2,7 @@ import os
 
 DBUSER = 'galactic'
 DBPASS = 'password'
-DBHOST = 'database'
+DBHOST = 'db-galactic-cms'
 DBPORT = '5432'
 DBNAME = 'testdb'
 
