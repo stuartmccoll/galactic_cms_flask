@@ -8,9 +8,9 @@ services:
 before_script:
   - docker-compose build galactic-cms
   - docker-compose up -d galactic-cms
+  - docker exec -it galactic-cms bash
 
 script:
-- docker exec -it galactic-cms bash
 - pytest --cove-report term --cov
 
 after_script:
