@@ -6,7 +6,8 @@ services:
   - docker-compose
 
 before_script:
-  - docker-compose up --build galactic-cms -d
+  - docker-compose build galactic-cms
+  - docker-compose up -d galactic-cms
 
 script:
 - docker exec -it galactic-cms bash
