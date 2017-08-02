@@ -1,0 +1,16 @@
+sudo: required
+
+language: python
+
+services:
+  - docker-compose
+
+before_script:
+  - docker-compose up --build galactic-cms -d
+
+script:
+- docker exec -it galactic-cms bash
+- pytest --cove-report term --cov
+
+after_script:
+- docker-compose stop galactic-cms
