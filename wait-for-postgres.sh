@@ -6,7 +6,7 @@ shift 2
 cmd="$@"
 
 # wait for the postgres docker to be running
-while ! pg_isready -h $postgres_host -p $postgres_port -q -U postgres; do
+while ! pg_isready -h $postgres_host -p $postgres_port; do
   >&2 echo "Postgres is unavailable - sleeping"
   sleep 1
 done
