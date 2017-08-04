@@ -11,9 +11,8 @@ services:
     depends_on:
     - database
     privileged: true
-    # entrypoint: bash -c "chmod 777 wait-for-postgres.sh && ./wait-for-postgres.sh db-galactic-cms 5432"
+    entrypoint: bash -c "chmod 777 wait-for-postgres.sh && ./wait-for-postgres.sh localhost:5432"
   database:
-    command: ["chmod 777 wait-for-postgres.sh", "./wait-for-postgres.sh db-galactic-cms 5432"]
     container_name: "db-galactic-cms"
     image: postgres:9
     env_file: .env
