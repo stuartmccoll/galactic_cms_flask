@@ -11,9 +11,9 @@ before_script:
   # wait for postgresql to shutdown
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
   - docker-compose build galactic-cms
-  - docker-compose up -d galactic-cms
 
 script:
+- docker-compose up -d galactic-cms
 - docker ps
 - docker logs galactic-cms
 - docker exec -it galactic-cms bash -c "pytest --cov-report term --cov"
