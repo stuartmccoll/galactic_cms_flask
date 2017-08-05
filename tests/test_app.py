@@ -1,8 +1,9 @@
+import json
 import unittest
 
 from application.init_app import app, init_app, db
 from application.models.user import User
-from application.views import show_admin
+import application.views # noqa
 
 
 class TestApp(unittest.TestCase):
@@ -12,6 +13,7 @@ class TestApp(unittest.TestCase):
         self.app = app
         init_app(self.app)
         self.app.config['WTF_CSRF_ENABLED'] = False
+        self.app.debug = False
         self.client = self.app.test_client()
         self._ctx = self.app.test_request_context()
         self._ctx.push()
@@ -38,32 +40,67 @@ class TestApp(unittest.TestCase):
             response = self.client.get('/login')
             self.assertEqual(response.status_code, 200)
 
-            response = self.client.post('/login', data={'username': 'neilarmstrong', 'password': 'protect'})
+            response = self.client.post('/login', data={'username':
+                                        'neilarmstrong', 'password':
+                                                         'protect'})
             self.assertEqual(response.status_code, 302)
-            self.assertEqual(response.location, 'http://localhost/admin/dashboard')
+            self.assertEqual(response.location,
+                             'http://localhost/admin/dashboard')
 
-            response = self.client.post('/login', data={'username': 'neilarmstrong', 'password': 'protect'}, follow_redirects=True)
+            response = self.client.post('/login', data={'username':
+                                        'neilarmstrong', 'password':
+                                                        'protect'},
+                                        follow_redirects=True)
             self.assertEqual(response.status_code, 200)
 
+            response = self.client.post('/login', data={'username':
+                                        'neilarmstrong', 'password':
+                                                         'invalid'})
+            self.assertIn('Invalid login credentials provided', response.data)
+            self.assertIn('Please try again', response.data)
 
-    # def test_show_admin(self):
-    #     with self.client:
-    #         # Test that the application returns a redirect
-    #         # response when a user is not logged in
-    #         response = self.client.get("/admin/dashboard")
-    #         self.assertEqual(response.status_code, 302)
+    def test_home(self):
+        with self.client:
+            response = self.client.get('/')
+            self.assertEqual(response.status_code, 200)
 
-    #         # Test that the application returns a 200
-    #         # response when a user is logged in
-    #         with self.client.session_transaction() as sess:
+    def test_show_admin(self):
+        with self.client.session_transaction() as sess:
+            # Test that the application returns a redirect
+            # response when a user is not logged in
+            response = self.client.get("/admin/dashboard")
+            self.assertEqual(response.status_code, 302)
 
-    #             sess['user_id'] = 1
-    #             sess['_fresh'] = True
+            # Test that the application returns a 200
+            # response when a user is logged in
+            sess['user_id'] = 1
+            sess['_fresh'] = True
 
-    #             res = self.client.get("/admin/dashboard")
-    #             self.assertEqual(res, 'hello')
+        response = self.client.get("/admin/dashboard")
+        self.assertEqual(response.status_code, 200)
 
+    def test_create_post(self):
+        with self.client.session_transaction() as sess:
+            # Test that the application returns a redirect
+            # response when a user is not logged in
+            response = self.client.get('/admin/create-post')
+            self.assertEqual(response.status_code, 302)
 
+            response = self.client.post('/admin/create-post')
+            self.assertEqual(response.status_code, 302)
 
-# if __name__ == '__main__':
-#     unittest.main()
+            sess['user_id'] = 1
+            sess['_fresh'] = True
+
+        response = self.client.get('/admin/create-post')
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post('/admin/create-post',
+                                    data={'title': 'Test Post'})
+        response_json = json.loads(response.data)
+        self.assertEqual(response_json['status'], 'failure')
+
+        response = self.client.post('/admin/create-post',
+                                    data={'title': 'Test Post',
+                                          'content': 'Test content'})
+        self.assertEqual(response.status_code, 200)

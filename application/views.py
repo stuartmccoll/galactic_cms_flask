@@ -87,6 +87,7 @@ def create_post():
             db.session.commit()
             return 'Post created successfully', 200
         logger.error('Create Post failed for user %s' % current_user.get_id())
+        return json.dumps({'status': 'failure'})
 
 
 @app.route('/admin/view-posts')
