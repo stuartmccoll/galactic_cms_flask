@@ -1,4 +1,4 @@
-# Galactic CMS [![Build Status](https://travis-ci.org/stuartmccoll/galactic_cms_flask.svg?branch=master)](https://travis-ci.org/stuartmccoll/galactic_cms_flask)
+# Galactic CMS [![Build Status](https://travis-ci.org/stuartmccoll/galactic_cms_flask.svg?branch=themes)](https://travis-ci.org/stuartmccoll/galactic_cms_flask)
 A lightweight content management system built using Python, Flask and Postgres.
 
 ![Galactic Logo](http://stuartmccoll.co.uk/galactic.png)
