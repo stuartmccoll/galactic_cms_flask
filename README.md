@@ -1,7 +1,7 @@
 # Galactic CMS [![Build Status](https://travis-ci.org/stuartmccoll/galactic_cms_flask.svg?branch=master)](https://travis-ci.org/stuartmccoll/galactic_cms_flask)
 A lightweight content management system built using Python, Flask and Postgres.
 
-(http://stuartmccoll.co.uk/galactic.png)
+![Galactic Logo](http://stuartmccoll.co.uk/galactic.png)
 
 # Installation
 Build the Docker images using the following command within the root directory:
