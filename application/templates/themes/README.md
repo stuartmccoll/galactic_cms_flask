@@ -27,7 +27,7 @@ A theme's config.json file should adhere to the following structure:
 The `config-name` value **must** match the name of the theme's directory and must only contain alphanumeric characters and underscores.
 
 ## Theme Installation
-The Galactic CMS administrator interface allows for simple installation of themes:
+The Galactic administrator interface allows for simple installation of themes:
 
 - Unzip the theme's directory into the templates/themes directory.
 - Ensure that the correct information is contained within the theme's config.json file.

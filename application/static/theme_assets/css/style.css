@@ -1,0 +1,84 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 400px;
+}
+
+.red {
+  color: #ff5483;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Open Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 300;
+}
+
+p {
+  line-height: 1.8em;
+}
+
+p, ul li {
+  font-family: 'Open Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 400;
+  color: #525c65;
+}
+
+.navbar-default {
+  background-color: #ffffff;
+}
+
+.latest-post-container {
+  box-shadow: 5px 5px 25px 0px rgba(46,61,73,0.2);
+}
+
+/* Footer Styling */
+
+footer {
+  position: absolute;
+  bottom: 0;
+  /* Set the fixed height of the footer here */
+  height: 400px;
+  width: 100%;
+  background-image: linear-gradient(to bottom right, #F7F7F7, #EAFBFF);
+}
+
+footer h2 {
+  font-size: 1.4em;
+}
+
+footer ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+footer ul li {
+  line-height: 2.0em;
+}
+
+footer div.row:first-of-type {
+  padding: 25px 0;
+}
+
+footer p:not(.nano) {
+  line-height: 1.8em;
+}
+
+p.nano {
+  font-size: 0.8em;
+  text-align: center;
+}
+
+p.nano a, footer ul li a {
+  color: #ff5483;
+}
+
+p.nano a:hover {
+  cursor: pointer;
+  text-decoration: none;
+}
+

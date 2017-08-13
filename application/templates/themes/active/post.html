@@ -1,0 +1,29 @@
+{% extends 'themes/active/base.html' %}
+
+        {% if previous_post %}
+        {{ previous_post }}
+        {% endif %}
+        {% if next_post %}
+        {{ next_post }}
+        {% endif %}
+        {{ latest_post }}
+
+        {% block content %}
+
+            <div class="row">
+
+                <div class="col-sm-8 col-sm-offset-2">
+        
+                    <h1 class="red">{{ post.title }}</h1>
+            
+                    <p>{{ post.content }}</p>
+
+                </div>
+
+            </div>
+        
+        {% endblock %}
+
+</body>
+
+</html>

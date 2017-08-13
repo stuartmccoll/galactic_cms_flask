@@ -31,7 +31,11 @@ def show_home():
     response = json.loads(get_latest_post())
     latest_post = response['latest_post']
 
-    return render_template('themes/active/index.html', latest_post=latest_post)
+    response = json.loads(get_latest_posts(5))
+    latest_posts = response
+
+    return render_template('themes/active/index.html', latest_post=latest_post,
+                           latest_posts=latest_posts)
 
 
 @app.route('/admin/dashboard')
@@ -114,8 +118,12 @@ def view_post(id):
     response = json.loads(get_latest_post())
     latest_post = response['latest_post']
 
+    response = json.loads(get_latest_posts(5))
+    latest_posts = response
+
     return render_template('post.html', post=post, previous_post=previous_post,
-                           next_post=next_post, latest_post=latest_post)
+                           next_post=next_post, latest_post=latest_post,
+                           latest_posts=latest_posts)
 
 
 @app.route('/admin/delete-post/<id>')
@@ -174,6 +182,7 @@ def user_settings():
             db.session.add(user_profile)
             db.session.commit()
             return 'User settings updated successfully', 200
+        return json.dumps({'status': 'failure'})
     if request.method == 'GET':
         logger.info('Retrieving User Settings screen for user %s'
                     % current_user.get_id())
@@ -297,6 +306,21 @@ def sign_out():
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
+
+
+def get_latest_posts(number):
+    returned_posts = db.session.query(Posts).order_by(Posts.id.desc()) \
+                    .limit(number).all()
+    logger.info(returned_posts)
+    logger.info(json.dumps(returned_posts[0].id))
+
+    latest_posts = {}
+    for posts in returned_posts:
+        logger.info(posts)
+        latest_posts[posts.id] = posts.title
+
+    logger.info(latest_posts)
+    return json.dumps(latest_posts)
 
 
 def get_latest_post():

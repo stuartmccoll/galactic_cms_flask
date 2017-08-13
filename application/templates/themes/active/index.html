@@ -1,1 +1,89 @@
 {% extends 'themes/active/base.html' %}
+
+{% block content %}
+
+<div class="row">
+
+    <div class="col-sm-6 col-sm-offset-2">
+
+        <h1 class="red">Lorem ipsum dolor sit amet</h1>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras molestie euismod purus non consectetur. Curabitur molestie, urna nec tincidunt vehicula, ligula mi eleifend ipsum, nec ultrices diam enim egestas augue. Nam iaculis mauris non mi blandit tempor. Vivamus porttitor nunc iaculis, suscipit nisi laoreet, faucibus nibh. Aliquam erat volutpat. Aliquam efficitur dignissim sapien, eget varius felis ornare in. Duis accumsan ex leo, vel convallis velit tempor interdum.</p>
+        
+        <p>Sed consequat finibus enim, nec venenatis tellus laoreet eu. Morbi eu sollicitudin magna, ut condimentum nulla. Sed non libero quis lorem ultrices tincidunt in nec orci. Aenean facilisis efficitur augue ut laoreet. Sed eu nisi at ipsum facilisis lobortis eget sed arcu. Ut eget turpis maximus, lacinia lacus sed, vulputate metus. Fusce arcu nibh, varius id vulputate ac, rutrum ut lorem. Nulla quis mauris at ipsum consequat semper eget sed lacus. Sed diam sem, aliquet in placerat at, vehicula ut urna. Praesent id dui vel augue euismod commodo ut vel risus. Praesent lectus mi, convallis ac posuere posuere, ultricies pulvinar urna. Vestibulum luctus, quam sed sodales hendrerit, est erat finibus purus, ac viverra lectus urna ac eros. Curabitur non maximus lacus. Nullam nisl orci, vestibulum vitae laoreet sit amet, accumsan id libero. Aliquam quis pellentesque magna.</p>
+        
+        <p>Morbi mauris ex, lobortis placerat elit at, pharetra egestas purus. Nulla malesuada, dolor id efficitur scelerisque, erat dui aliquam magna, id eleifend dolor eros sed ex. Proin malesuada leo sed quam posuere, a auctor purus iaculis. Vestibulum mollis ultricies tellus tempor scelerisque. In metus ligula, eleifend quis sem ultricies, tincidunt fermentum diam. Proin varius lectus nulla. Vestibulum condimentum commodo aliquam. Suspendisse posuere augue nec posuere placerat. Phasellus aliquam gravida ex ut finibus. Donec vestibulum ipsum eu arcu interdum dapibus. Nam ullamcorper pretium felis, in porta metus luctus sed. Morbi sit amet diam nisi.</p>
+
+    </div>
+
+    <div class="col-sm-2">
+
+        <img class="img-responsive" src="{{ url_for('static', filename='placeholder.png') }}" />
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-sm-2 col-sm-offset-2">
+
+        <h3 class="red">Latest Posts</h2>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-sm-2 col-sm-offset-2">
+
+        <div class="latest-post-container">
+
+            <div class="latest-post">
+
+                <h3>Hello</h3>
+
+                <p>Aenean tincidunt est ex, eget gravida sem blandit sit amet...</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-sm-2">
+
+        <div class="latest-post-container">
+
+            <div class="latest-post">
+
+                <h3>Hello</h3>
+
+                <p>Aenean tincidunt est ex, eget gravida sem blandit sit amet...</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-sm-2">
+
+        <div class="latest-post-container">
+
+            <div class="latest-post">
+
+                <h3>Hello</h3>
+
+                <p>Aenean tincidunt est ex, eget gravida sem blandit sit amet...</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
