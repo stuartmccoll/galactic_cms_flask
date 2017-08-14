@@ -32,6 +32,13 @@
 
 		<div class="form-group">
 
+			{{ form.featured_image.label }}
+			{{ form.featured_image(class="form-control") }}
+
+		</div>
+
+		<div class="form-group">
+
 			{{ form.csrf_token }}
 			<button id="create-post-submit" class="button-positive">Create Post</button>
 
