@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import render_template, request, redirect, flash, jsonify
 from flask_login import LoginManager, login_user, logout_user, \
                         login_required, current_user
+import base64
 import json
 import os
 
@@ -81,15 +82,17 @@ def create_post():
         return render_template('create-post.html', form=form)
     if request.method == 'POST':
         if form.validate_on_submit():
+            featured_image = base64.b64encode(form.featured_image.data.read())
             post = Posts(title=form.title.data,
                          content=form.content.data,
+                         featured_image=featured_image,
                          date_posted=datetime.now(),
-                         user_id=current_user.get_id())
+                         user_id=current_user.get_id(),)
             logger.info('Creating a New Post with the title "%s" for user %s'
                         % (form.title.data, current_user.get_id()))
             db.session.add(post)
             db.session.commit()
-            return 'Post created successfully', 200
+            return json.dumps({'status': 'success'})
         logger.error('Create Post failed for user %s' % current_user.get_id())
         return json.dumps({'status': 'failure'})
 
@@ -149,7 +152,8 @@ def edit_post(id):
                     (current_user.get_id(), id))
         form.title.data = returned_post.title
         form.content.data = returned_post.content
-        return render_template('edit-post.html', id=id, form=form)
+        featured_image = returned_post.featured_image
+        return render_template('edit-post.html', id=id, form=form, featured_image=featured_image)
     if request.method == 'POST':
         if form.validate_on_submit():
             returned_post.title = form.title.data
