@@ -1,4 +1,5 @@
 import json
+import mock
 import unittest
 
 from application.init_app import app, init_app, db
@@ -31,8 +32,8 @@ class TestApp(unittest.TestCase):
             db.session.add(test_user)
             db.session.commit()
 
-    # def tearDown(self):
-    #     pass
+    def tearDown(self):
+        self._ctx.pop()
 
     def test_login(self):
         with self.client:
@@ -101,6 +102,43 @@ class TestApp(unittest.TestCase):
         self.assertEqual(response_json['status'], 'failure')
 
         response = self.client.post('/admin/create-post',
-                                    data={'title': 'Test Post',
-                                          'content': 'Test content'})
+                                    data={'content': 'Test Content'})
+        response_json = json.loads(response.data)
+        self.assertEqual(response_json['status'], 'failure')
+
+    def test_view_posts(self):
+        with self.client.session_transaction() as sess:
+            # Test that the application returns a redirect
+            # response when a user is not logged in
+            response = self.client.get('/admin/view-posts')
+            self.assertEqual(response.status_code, 302)
+
+            sess['user_id'] = 1
+
+        response = self.client.get('/admin/view-posts')
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_settings(self):
+        with self.client.session_transaction() as sess:
+            # Test that the application returns a redirect
+            # response when a user is not logged in
+            response = self.client.get('/admin/user-settings')
+            self.assertEqual(response.status_code, 302)
+
+            response = self.client.post('/admin/user-settings')
+            self.assertEqual(response.status_code, 302)
+
+            sess['user_id'] = 1
+
+        response = self.client.get('/admin/user-settings')
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post('/admin/user-settings')
+        response_json = json.loads(response.data)
+        self.assertEqual(response_json['status'], 'failure')
+
+        response = self.client.post('/admin/user-settings',
+                                    data={'first_name': 'Neil',
+                                          'last_name': 'Armstrong'})
+        self.assertEqual(response.data, 'User settings updated successfully')
         self.assertEqual(response.status_code, 200)
