@@ -191,8 +191,9 @@ def user_settings():
     if request.method == 'GET':
         logger.info('Retrieving User Settings screen for user %s'
                     % current_user.get_id())
-        form.first_name.data = user_profile.first_name
-        form.last_name.data = user_profile.last_name
+        if user_profile:
+            form.first_name.data = user_profile.first_name
+            form.last_name.data = user_profile.last_name
         return render_template('user-settings.html', form=form)
 
 
@@ -324,7 +325,7 @@ def get_latest_posts(number):
             latest_posts[posts.id] = posts.title
 
         return json.dumps(latest_posts)
-    return False
+    return json.dumps({"latest_posts": False})
 
 
 def get_latest_post():
