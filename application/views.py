@@ -33,7 +33,8 @@ def show_home():
     latest_post = response['latest_post']
 
     response = json.loads(get_latest_posts(5))
-    latest_posts = response
+    if response:
+        latest_posts = response
 
     return render_template('themes/active/index.html', latest_post=latest_post,
                            latest_posts=latest_posts)
@@ -315,21 +316,22 @@ def page_not_found(error):
 def get_latest_posts(number):
     returned_posts = db.session.query(Posts).order_by(Posts.id.desc()) \
                     .limit(number).all()
-    logger.info(returned_posts)
-    logger.info(json.dumps(returned_posts[0].id))
 
-    latest_posts = {}
-    for posts in returned_posts:
-        logger.info(posts)
-        latest_posts[posts.id] = posts.title
+    if returned_posts:
+        latest_posts = {}
+        for posts in returned_posts:
+            logger.info(posts)
+            latest_posts[posts.id] = posts.title
 
-    logger.info(latest_posts)
-    return json.dumps(latest_posts)
+        return json.dumps(latest_posts)
+    return False
 
 
 def get_latest_post():
     returned_post = db.session.query(Posts).order_by(Posts.id.desc()).first()
-    return json.dumps({"latest_post": returned_post.id})
+    if returned_post:
+        return json.dumps({"latest_post": returned_post.id})
+    return json.dumps({"latest_post": False})
 
 
 def get_next_post(current_post):

@@ -99,9 +99,11 @@
                     <h2 class="red">Latest Posts</h2>
 
                     <ul>
-                        {% for key, value in latest_posts.iteritems() %}
-                        <li><a href="/post/{{ key }}">{{ value }}</a></li>
-                        {% endfor %}
+                        {% if latest_posts %}
+                            {% for key, value in latest_posts.iteritems() %}
+                            <li><a href="/post/{{ key }}">{{ value }}</a></li>
+                            {% endfor %}
+                        {% endif %}
                     </ul>
                         
                 </div>
