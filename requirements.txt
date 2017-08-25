@@ -6,6 +6,7 @@ flask_script
 flask_sqlalchemy
 flask_wtf
 marshmallow_sqlalchemy
+mock
 nose
 psycopg2
 pytest
