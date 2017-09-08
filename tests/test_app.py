@@ -203,6 +203,24 @@ class TestApp(unittest.TestCase):
         response = self.client.get('admin/edit-post/1')
         self.assertEqual(response.status_code, 200)
 
+    @mock.patch('application.views.PostForm.validate_on_submit')
+    @mock.patch('application.views.db.session.query')
+    def test_post_edit_post(self, mock_session_query, mock_validate):
+        with self.client.session_transaction() as sess:
+            # Test that the application returns a redirect
+            # response when a user is not logged in
+            response = self.client.post('/admin/edit-post/1')
+            self.assertEqual(response.status_code, 302)
+
+            sess['user_id'] = 1
+
+        mock_session_query.return_value = MockQuery()
+        mock_validate.return_value = True
+
+        response = self.client.post('/admin/edit-post/1')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, 'Post updated successfully')
+
     def test_user_settings(self):
         with self.client.session_transaction() as sess:
             # Test that the application returns a redirect
