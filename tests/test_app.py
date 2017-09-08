@@ -172,6 +172,19 @@ class TestApp(unittest.TestCase):
         response = self.client.get('/post/1')
         self.assertEqual(response.status_code, 200)
 
+    def test_delete_post(self):
+        with self.client.session_transaction() as sess:
+            # Test that the application returns a redirect
+            # response when a user is not logged in
+            response = self.client.get('/admin/delete-post/1')
+            self.assertEqual(response.status_code, 302)
+
+            sess['user_id'] = 1
+
+        response = self.client.get('/admin/delete-post/1')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, 'Post deleted successfully')
+
     def test_user_settings(self):
         with self.client.session_transaction() as sess:
             # Test that the application returns a redirect
