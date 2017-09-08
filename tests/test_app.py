@@ -10,6 +10,9 @@ import application.views # noqa
 class MockItem():
     def __init__(self):
         self.id = 1
+        self.title = 'Test Post'
+        self.content = 'Content.'
+        self.featured_image = 'Featured image'
 
 
 class MockFilter():
@@ -25,7 +28,7 @@ class MockQuery():
     def __init__(self):
         self._filter_by = MockFilter()
 
-    def filter_by(self, id):
+    def filter_by(self, id, user_id=None):
         return self._filter_by
 
 
@@ -184,6 +187,21 @@ class TestApp(unittest.TestCase):
         response = self.client.get('/admin/delete-post/1')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, 'Post deleted successfully')
+
+    @mock.patch('application.views.db.session.query')
+    def test_get_edit_post(self, mock_session_query):
+        with self.client.session_transaction() as sess:
+            # Test that the application returns a redirect
+            # response when a user is not logged in
+            response = self.client.get('/admin/edit-post/1')
+            self.assertEqual(response.status_code, 302)
+
+            sess['user_id'] = 1
+
+        mock_session_query.return_value = MockQuery()
+
+        response = self.client.get('admin/edit-post/1')
+        self.assertEqual(response.status_code, 200)
 
     def test_user_settings(self):
         with self.client.session_transaction() as sess:
