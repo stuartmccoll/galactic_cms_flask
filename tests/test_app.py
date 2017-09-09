@@ -4,6 +4,7 @@ import unittest
 
 from application.init_app import app, init_app, db
 from application.models.user import User
+from application.views import get_latest_post
 import application.views # noqa
 
 
@@ -15,9 +16,21 @@ class MockItem():
         self.featured_image = 'Featured image'
 
 
+class MockOrderBy():
+    def __init__(self):
+        self._filter_by = MockFilter()
+        self._first = MockItem()
+
+    def filter_by(self, id, user_id=None):
+        return self._filter_by
+
+    def first(self):
+        return self._first
+
+
 class MockFilter():
     def __init__(self):
-        self._count = 0
+        self._count = 1
         self._first = MockItem()
 
     def first(self):
@@ -27,9 +40,46 @@ class MockFilter():
 class MockQuery():
     def __init__(self):
         self._filter_by = MockFilter()
+        self._order_by = MockOrderBy()
 
     def filter_by(self, id, user_id=None):
         return self._filter_by
+
+    def order_by(self, id, user_id=None):
+        return self._order_by
+
+
+class MockQueryNoReturn():
+    def __init__(self):
+        self._filter_by = MockBadFilter()
+        self._order_by = MockBadOrderBy()
+
+    def filter_by(self, id, user_id=None):
+        return self._filter_by
+
+    def order_by(self, id, user_id=None):
+        return self._order_by
+
+
+class MockBadFilter():
+    def __init__(self):
+        self._count = 0
+        self._first = None
+
+    def first(self):
+        return self._first
+
+
+class MockBadOrderBy():
+    def __init__(self):
+        self._filter_by = MockBadFilter()
+        self._first = None
+
+    def filter_by(self, id, user_id=None):
+        return self._filter_by
+
+    def first(self):
+        return self._first
 
 
 class TestApp(unittest.TestCase):
@@ -245,3 +295,14 @@ class TestApp(unittest.TestCase):
                                           'last_name': 'Armstrong'})
         self.assertEqual(response.data, 'User settings updated successfully')
         self.assertEqual(response.status_code, 200)
+
+    @mock.patch('application.views.db.session.query')
+    def test_get_latest_post(self, mock_session_query):
+        mock_session_query.return_value = MockQuery()
+
+        response = json.loads(get_latest_post())
+        self.assertEqual(response['latest_post'], 1)
+
+        mock_session_query.return_value = MockQueryNoReturn()
+        response = json.loads(get_latest_post())
+        self.assertEqual(response['latest_post'], False)
