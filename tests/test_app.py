@@ -4,7 +4,8 @@ import unittest
 
 from application.init_app import app, init_app, db
 from application.models.user import User
-from application.views import get_latest_post
+from application.views import get_latest_post, get_latest_posts, \
+                              get_next_post, get_previous_post
 import application.views # noqa
 
 
@@ -37,13 +38,25 @@ class MockFilter():
         return self._first
 
 
+class MockPosts():
+    def __init__(self):
+        self._query = MockQuery()
+
+    def query(self):
+        return self._query
+
+
 class MockQuery():
     def __init__(self):
         self._filter_by = MockFilter()
+        self._filter = MockFilter()
         self._order_by = MockOrderBy()
 
     def filter_by(self, id, user_id=None):
         return self._filter_by
+
+    def filter(self, id):
+        return self._filter
 
     def order_by(self, id, user_id=None):
         return self._order_by
@@ -306,3 +319,35 @@ class TestApp(unittest.TestCase):
         mock_session_query.return_value = MockQueryNoReturn()
         response = json.loads(get_latest_post())
         self.assertEqual(response['latest_post'], False)
+
+    @mock.patch('application.views.Posts.query.filter')
+    @mock.patch('application.views.Posts.query')
+    @mock.patch('application.views.Posts')
+    def test_get_next_post(self, mock_posts, mock_query, mock_filter):
+        # Test for the return of a successful response
+        mock_filter.return_value = MockFilter()
+
+        response = json.loads(get_next_post(1))
+        self.assertEqual(response['next_post'], 1)
+
+        # Test for the return of a non-successful response
+        mock_filter.return_value = MockBadFilter()
+
+        response = json.loads(get_next_post(1))
+        self.assertEqual(response['next_post'], False)
+
+    @mock.patch('application.views.Posts.query.filter')
+    @mock.patch('application.views.Posts.query')
+    @mock.patch('application.views.Posts')
+    def test_get_previous_post(self, mock_posts, mock_query, mock_filter):
+        # Test for the return of a successful response
+        mock_filter.return_value = MockFilter()
+
+        response = json.loads(get_previous_post(2))
+        self.assertEqual(response['previous_post'], 1)
+
+        # Test for the return of a non-successful response
+        mock_filter.return_value = MockBadFilter()
+
+        response = json.loads(get_previous_post(2))
+        self.assertEqual(response['previous_post'], False)
