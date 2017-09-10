@@ -410,3 +410,15 @@ class TestApp(unittest.TestCase):
         response = self.client.get('/admin/sign-out')
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login', response.data)
+
+    def test_help(self):
+        with self.client.session_transaction() as sess:
+            # Test that the application returns a redirect
+            # response when a user is not logged in
+            response = self.client.get('/admin/help')
+            self.assertEqual(response.status_code, 302)
+
+            sess['user_id'] = 1
+
+        response = self.client.get('/admin/help')
+        self.assertEqual(response.status_code, 200)
