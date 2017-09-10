@@ -5,7 +5,8 @@ import unittest
 from application.init_app import app, init_app, db
 from application.models.user import User
 from application.views import get_latest_post, get_latest_posts, \
-                              get_next_post, get_previous_post
+                              get_next_post, get_previous_post, \
+                              page_not_found
 import application.views # noqa
 
 
@@ -389,3 +390,8 @@ class TestApp(unittest.TestCase):
 
         response = json.loads(get_previous_post(2))
         self.assertEqual(response['previous_post'], False)
+
+    def test_404_response(self):
+        response = self.client.get('/does-not-exist')
+        self.assertIn('404 Not Found', response.data)
+        self.assertEqual(response.status_code, 404)
