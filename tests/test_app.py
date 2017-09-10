@@ -17,16 +17,30 @@ class MockItem():
         self.featured_image = 'Featured image'
 
 
+class MockLimit():
+    def __init__(self):
+        self._all = {
+            MockItem()
+        }
+
+    def all(self):
+        return self._all
+
+
 class MockOrderBy():
     def __init__(self):
         self._filter_by = MockFilter()
         self._first = MockItem()
+        self._limit = MockLimit()
 
     def filter_by(self, id, user_id=None):
         return self._filter_by
 
     def first(self):
         return self._first
+
+    def limit(self, number):
+        return self._limit
 
 
 class MockFilter():
@@ -87,12 +101,24 @@ class MockBadOrderBy():
     def __init__(self):
         self._filter_by = MockBadFilter()
         self._first = None
+        self._limit = MockBadLimit()
 
     def filter_by(self, id, user_id=None):
         return self._filter_by
 
     def first(self):
         return self._first
+
+    def limit(self, id):
+        return self._limit
+
+
+class MockBadLimit():
+    def __init__(self):
+        self._all = None
+
+    def all(self):
+        return self._all
 
 
 class TestApp(unittest.TestCase):
@@ -308,6 +334,18 @@ class TestApp(unittest.TestCase):
                                           'last_name': 'Armstrong'})
         self.assertEqual(response.data, 'User settings updated successfully')
         self.assertEqual(response.status_code, 200)
+
+    @mock.patch('application.views.db.session.query')
+    def test_get_latest_posts(self, mock_session_query):
+        mock_session_query.return_value = MockQuery()
+
+        response = json.loads(get_latest_posts(1))
+        self.assertEqual(response['1'], 'Test Post')
+
+        mock_session_query.return_value = MockQueryNoReturn()
+
+        response = json.loads(get_latest_posts(1))
+        self.assertEqual(response['latest_posts'], False)
 
     @mock.patch('application.views.db.session.query')
     def test_get_latest_post(self, mock_session_query):
