@@ -6,7 +6,7 @@ from application.init_app import app, init_app, db
 from application.models.user import User
 from application.views import get_latest_post, get_latest_posts, \
                               get_next_post, get_previous_post, \
-                              page_not_found
+                              get_working_directory
 import application.views # noqa
 
 
@@ -434,3 +434,15 @@ class TestApp(unittest.TestCase):
 
         response = self.client.get('/admin/raise-support-ticket')
         self.assertEqual(response.status_code, 200)
+
+    @mock.patch('application.views.os.path.dirname')
+    def test_get_working_directory(self, mock_dirname):
+        mock_dirname.return_value = '/app/application'
+
+        response = get_working_directory()
+        self.assertEqual(response, '/app/application')
+
+        mock_dirname.return_value = 'app/application/something_else'
+
+        response = get_working_directory()
+        self.assertEqual(response, False)
