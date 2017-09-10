@@ -395,3 +395,18 @@ class TestApp(unittest.TestCase):
         response = self.client.get('/does-not-exist')
         self.assertIn('404 Not Found', response.data)
         self.assertEqual(response.status_code, 404)
+
+    def test_logout(self):
+        with self.client.session_transaction() as sess:
+            # Test that the application returns a redirect
+            # response when a user is not logged in
+            response = self.client.get('/admin/sign-out')
+            self.assertEqual(response.status_code, 302)
+
+            sess['user_id'] = 1
+
+        # Test that the application returned a redirect
+        # to the login screen if a user was logged in
+        response = self.client.get('/admin/sign-out')
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/login', response.data)
