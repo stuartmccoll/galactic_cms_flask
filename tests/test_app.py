@@ -10,12 +10,56 @@ from application.views import get_latest_post, get_latest_posts, \
 import application.views # noqa
 
 
+class MockData():
+    def __init__(self):
+        self._read = 'Image'
+
+    def read(self):
+        return self._read
+
+
+class MockId():
+    def __init__(self):
+        self.data = 1
+
+
+class MockTitle():
+    def __init__(self):
+        self.data = 'Post Title'
+
+
+class MockContent():
+    def __init__(self):
+        self.data = 'Post content'
+
+
+class MockFeaturedImage():
+    def __init__(self):
+        self.data = MockData()
+
+
+class MockPostForm():
+    def __init__(self):
+        self.id = MockId()
+        self.title = MockTitle()
+        self.content = MockContent()
+        self.featured_image = MockFeaturedImage()
+        self._validate_on_submit = True
+
+    def validate_on_submit(self):
+        return self._validate_on_submit
+
+
 class MockItem():
     def __init__(self):
         self.id = 1
         self.title = 'Test Post'
         self.content = 'Content.'
-        self.featured_image = 'Featured image'
+        self.featured_image = MockFeaturedImage()
+        self._validate_on_submit = True
+
+    def validate_on_submit(self):
+        return self._validate_on_submit
 
 
 class MockLimit():
@@ -195,46 +239,47 @@ class TestApp(unittest.TestCase):
         response = self.client.get("/admin/dashboard")
         self.assertEqual(response.status_code, 200)
 
-    # def test_create_post(self):
-    #     with self.client.session_transaction() as sess:
-    #         # Test that the application returns a redirect
-    #         # response when a user is not logged in
-    #         response = self.client.get('/admin/create-post')
-    #         self.assertEqual(response.status_code, 302)
+    def test_create_post(self):
+        with self.client.session_transaction() as sess:
+            # Test that the application returns a redirect
+            # response when a user is not logged in
+            response = self.client.get('/admin/create-post')
+            self.assertEqual(response.status_code, 302)
 
-    #         response = self.client.post('/admin/create-post')
-    #         self.assertEqual(response.status_code, 302)
+            response = self.client.post('/admin/create-post')
+            self.assertEqual(response.status_code, 302)
 
-    #         sess['user_id'] = 1
-    #         sess['_fresh'] = True
+            sess['user_id'] = 1
+            sess['_fresh'] = True
 
-    #     response = self.client.get('/admin/create-post')
-    #     self.assertEqual(response.status_code, 200)
+        response = self.client.get('/admin/create-post')
+        self.assertEqual(response.status_code, 200)
 
-    #     response = self.client.post('/admin/create-post',
-    #                                 data={'title': 'Test Post'})
-    #     response_json = json.loads(response.data)
-    #     self.assertEqual(response_json['status'], 'failure')
+        response = self.client.post('/admin/create-post',
+                                    data={'title': 'Test Post'})
+        response_json = json.loads(response.data)
+        self.assertEqual(response_json['status'], 'failure')
 
-    #     response = self.client.post('/admin/create-post',
-    #                                 data={'content': 'Test Content'})
-    #     response_json = json.loads(response.data)
-    #     self.assertEqual(response_json['status'], 'failure')
+        response = self.client.post('/admin/create-post',
+                                    data={'content': 'Test Content'})
+        response_json = json.loads(response.data)
+        self.assertEqual(response_json['status'], 'failure')
 
-    # def test_create_post_2(self):
-    #     with self.client.session_transaction() as sess:
-    #         sess['user_id'] = 1
-    #         sess['_fresh'] = True
+    def test_create_post_success(self):
+        with self.client.session_transaction() as sess:
+            sess['user_id'] = 1
+            sess['_fresh'] = True
 
-    #     with mock.patch('application.views.base64.b64encode') as mock_base64encode, \
-    #             mock.patch('application.views.PostForm') as mock_form:
-    #         mock_base64encode.return_value = "Image"
-    #         mock_form.return_value.title.return_value.data.return_value = "hello"
-    #         response = self.client.post('/admin/create-post',
-    #                                     data={'title': 'Test Post',
-    #                                         'content': 'Test content',
-    #                                         'featured_image': 'Image'})
-    #         self.assertEqual(response.status_code, 200)
+        with mock.patch('application.views.base64.b64encode') as \
+            mock_base64encode, \
+                mock.patch('application.views.PostForm') as mock_form:
+            mock_base64encode.return_value = 'Image'
+            mock_form.return_value = MockPostForm()
+            response = self.client.post('/admin/create-post',
+                                        data={'title': 'Test Post',
+                                              'content': 'Test content',
+                                              'featured_image': 'Image'})
+            self.assertEqual(response.status_code, 200)
 
     def test_view_posts(self):
         with self.client.session_transaction() as sess:
