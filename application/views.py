@@ -154,7 +154,8 @@ def edit_post(id):
         form.title.data = returned_post.title
         form.content.data = returned_post.content
         featured_image = returned_post.featured_image
-        return render_template('edit-post.html', id=id, form=form, featured_image=featured_image)
+        return render_template('edit-post.html', id=id, form=form,
+                               featured_image=featured_image)
     if request.method == 'POST':
         if form.validate_on_submit():
             returned_post.title = form.title.data
@@ -316,7 +317,7 @@ def page_not_found(error):
 
 def get_latest_posts(number):
     returned_posts = db.session.query(Posts).order_by(Posts.id.desc()) \
-                    .limit(number).all()
+        .limit(number).all()
 
     if returned_posts:
         latest_posts = {}
