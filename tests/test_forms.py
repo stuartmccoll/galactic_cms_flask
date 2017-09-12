@@ -16,7 +16,7 @@ class MockUser():
 class MockQuery():
     def __init__(self):
         self._filter_by = MockFilter()
-    
+
     def filter_by(self):
         return self._filter_by
 
@@ -57,6 +57,24 @@ class MockBadFilter():
 
     def first(self):
         return self._first
+
+
+class MockBadFilterWithReturn():
+    def __init__(self):
+        self._first = MockBadItem()
+
+    def first(self):
+        return self._first
+
+
+class MockBadItem():
+    def __init__(self):
+        self.username = 'neilarmstrong'
+        self.password = 'password'
+        self._validate_login = None
+
+    def validate_login(self, password, another_password):
+        return self._validate_login
 
 
 class TestForms(unittest.TestCase):
@@ -101,3 +119,21 @@ class TestForms(unittest.TestCase):
         self.assertIn('Invalid login credentials provided',
                       str(form.username.errors))
         self.assertIn('Please try again', str(form.username.errors))
+
+    @patch('application.forms.login.FlaskForm.validate')
+    @patch('application.forms.login.User.query.filter_by')
+    @patch('application.forms.login.User.query')
+    @patch('application.forms.login.User')
+    def test_validate_login(self, mock_model, mock_model_query,
+                            mock_model_filter_by, mock_flask_form_validate):
+        form = LoginForm()
+        form.username.data = 'neilarmstrong'
+        form.username.errors = list()
+        form.password.data = 'password'
+
+        mock_flask_form_validate.return_value = True
+        mock_model_filter_by.return_value = MockBadFilterWithReturn()
+
+        form_validate = form.validate()
+        self.assertFalse(form_validate)
+        self.assertIn('Invalid login credentials', str(form.username.errors))
