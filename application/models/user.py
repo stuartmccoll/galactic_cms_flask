@@ -29,9 +29,9 @@ class User(db.Model, UserMixin):
         self.email = email
         self.password = password
 
-        def __repr__(self):
-            return '<User: id=%s, username=%s, email=%s>' \
-                    % (self.id, self.username, self.email)
+    def __repr__(self):
+        return '<User: id=%s, username=%s, email=%s>' \
+                % (self.id, self.username, self.email)
 
     @staticmethod
     def validate_login(password_hash, password):
