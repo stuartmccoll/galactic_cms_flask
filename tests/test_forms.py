@@ -1,7 +1,7 @@
 import unittest
 from mock import patch
 
-from application.init_app import app, init_app, db
+from application.init_app import app, init_app
 from application.forms.login import LoginForm
 
 
@@ -33,6 +33,10 @@ class MockItem():
     def __init__(self):
         self.username = 'neilarmstrong'
         self.password = 'password'
+        self._validate_login = True
+
+    def validate_login(self, password, another_password):
+        return self._validate_login
 
 
 class MockUserNoReturn():
@@ -124,8 +128,9 @@ class TestForms(unittest.TestCase):
     @patch('application.forms.login.User.query.filter_by')
     @patch('application.forms.login.User.query')
     @patch('application.forms.login.User')
-    def test_validate_login(self, mock_model, mock_model_query,
-                            mock_model_filter_by, mock_flask_form_validate):
+    def test_false_validate_login(self, mock_model, mock_model_query,
+                                  mock_model_filter_by, 
+                                  mock_flask_form_validate):
         form = LoginForm()
         form.username.data = 'neilarmstrong'
         form.username.errors = list()
@@ -137,3 +142,20 @@ class TestForms(unittest.TestCase):
         form_validate = form.validate()
         self.assertFalse(form_validate)
         self.assertIn('Invalid login credentials', str(form.username.errors))
+
+    @patch('application.forms.login.FlaskForm.validate')
+    @patch('application.forms.login.User.query.filter_by')
+    @patch('application.forms.login.User.query')
+    @patch('application.forms.login.User')
+    def test_successful_path(self, mock_model, mock_model_query,
+                             mock_model_filter_by, mock_flask_form_validate):
+        form = LoginForm()
+        form.username.data = 'neilarmstrong'
+        form.username.errors = list()
+        form.password.data = 'password'
+
+        mock_flask_form_validate.return_value = True
+        mock_model_filter_by.return_value = MockFilter()
+
+        form_validate = form.validate()
+        self.assertTrue(form_validate)
