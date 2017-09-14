@@ -1,8 +1,8 @@
 import unittest
-from mock import patch
 
 from application.init_app import app, init_app, db
 from application.models.user import User
+from application.models.user_profile import UserProfile
 
 
 class TestModels(unittest.TestCase):
@@ -24,3 +24,13 @@ class TestModels(unittest.TestCase):
         self.assertEqual(user.password, 'pass')
         self.assertEqual(repr(user),
                          '<User: id=None, username=name, email=email>')
+
+    def test_user_profile_model(self):
+        user_profile = UserProfile(1969, 'Buzz', 'Aldrin')
+        self.assertEqual(user_profile.id, 1969)
+        self.assertEqual(user_profile.first_name, 'Buzz')
+        self.assertEqual(user_profile.last_name, 'Aldrin')
+        self.assertEqual(repr(user_profile),
+                         '<User Profile : id=1969, first_name=Buzz, ' +
+                         'last_name=Aldrin>')
+        self.assertEqual(user_profile.full_name(), 'Buzz Aldrin')
