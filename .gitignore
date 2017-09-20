@@ -6,3 +6,5 @@ bin/
 include/
 lib/
 pip-selfcheck.json
+application/templates/themes/*
+!application/templates/themes/active
