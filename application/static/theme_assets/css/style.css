@@ -36,6 +36,28 @@ p, ul li {
   box-shadow: 5px 5px 25px 0px rgba(46,61,73,0.2);
 }
 
+#content {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+#breakout {
+  background-image: linear-gradient(to bottom right, #FF68C1, #C8368D);
+}
+
+#breakout .row {
+  padding: 75px 0;
+}
+
+#breakout .row .col-sm-6 {
+  background-color: #FFFFFF;
+  border-radius: 5px;
+}
+
+#about {
+  height: 400px;
+}
+
 /* Footer Styling */
 
 footer {
