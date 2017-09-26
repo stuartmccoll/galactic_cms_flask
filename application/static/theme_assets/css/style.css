@@ -54,6 +54,27 @@ p, ul li {
   border-radius: 5px;
 }
 
+#breakout h2, #breakout p {
+  text-align: center;
+}
+
+#breakout p {
+  padding: 15px;
+}
+
+#breakout button {
+  background-color: #FF68C1;
+  border: 0;
+  padding: 15px;
+  font-size: 1.4em;
+  font-family: 'Open Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 300;
+  color: #FFFFFF;
+  margin-bottom: 25px;
+  border-radius: 5px;
+}
+
 #about {
   height: 400px;
 }
