@@ -129,7 +129,7 @@
                     <ul>
                         {% if latest_posts %}
                             {% for key, value in latest_posts.iteritems() %}
-                            <li><a href="/post/{{ key }}">{{ value }}</a></li>
+                            <li><a href="/post/{{ key }}">{{ value.title }}</a></li>
                             {% endfor %}
                         {% endif %}
                     </ul>

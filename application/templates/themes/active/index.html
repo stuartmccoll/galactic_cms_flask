@@ -36,53 +36,35 @@
 
 <div class="row">
 
-    <div class="col-sm-2 col-sm-offset-2">
+    <div class="col-sm-2"></div>
 
-        <div class="latest-post-container">
+    {% for post in latest_posts %}
+        {% if loop.index <= 3 %}
 
-            <div class="latest-post">
+            <div class="col-sm-2">
+                    
+                <div class="latest-post-container">
 
-                <h3>Hello</h3>
+                    <div class="latest-post">
 
-                <p>Aenean tincidunt est ex, eget gravida sem blandit sit amet...</p>
+                        {% if latest_posts[post].featured_image %}
+                            <img src="data:image/jpg;base64, {{ latest_posts[post].featured_image }}" class="img-responsive" />
+                        {% else %}
+                            <p>REPLACE ME WITH PLACEHOLDER</p>
+                        {% endif %}
 
-            </div>
+                        <h3>{{ latest_posts[post].title }}</h3>
 
-        </div>
+                        <p>Aenean tincidunt est ex, eget gravida sem blandit sit amet...</p>
 
-    </div>
+                    </div>
 
-    <div class="col-sm-2">
-
-        <div class="latest-post-container">
-
-            <div class="latest-post">
-
-                <h3>Hello</h3>
-
-                <p>Aenean tincidunt est ex, eget gravida sem blandit sit amet...</p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-sm-2">
-
-        <div class="latest-post-container">
-
-            <div class="latest-post">
-
-                <h3>Hello</h3>
-
-                <p>Aenean tincidunt est ex, eget gravida sem blandit sit amet...</p>
+                </div>
 
             </div>
 
-        </div>
-
-    </div>
+        {% endif %}
+    {% endfor %}
 
 </div>
 
