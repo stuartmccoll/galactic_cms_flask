@@ -55,7 +55,7 @@ class MockItem():
         self.id = 1
         self.title = 'Test Post'
         self.content = 'Content.'
-        self.featured_image = MockFeaturedImage()
+        self.featured_image = 'Image'
         self._validate_on_submit = True
 
     def validate_on_submit(self):
@@ -386,7 +386,8 @@ class TestApp(unittest.TestCase):
         mock_session_query.return_value = MockQuery()
 
         response = json.loads(get_latest_posts(1))
-        self.assertEqual(response['1'], 'Test Post')
+        self.assertEqual(response['1']['featured_image'], 'Image')
+        self.assertEqual(response['1']['title'], 'Test Post')
 
         mock_session_query.return_value = MockQueryNoReturn()
 

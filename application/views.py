@@ -323,7 +323,10 @@ def get_latest_posts(number):
         latest_posts = {}
         for posts in returned_posts:
             logger.info(posts)
-            latest_posts[posts.id] = posts.title
+            latest_posts[posts.id] = {
+                "title": posts.title,
+                "featured_image": str(posts.featured_image)
+            }
 
         return json.dumps(latest_posts)
     return json.dumps({"latest_posts": False})
