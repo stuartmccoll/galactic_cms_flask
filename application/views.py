@@ -180,6 +180,7 @@ def user_settings():
                 user_profile = UserProfile(id=current_user.get_id(),
                                            first_name=form.first_name.data,
                                            last_name=form.last_name.data)
+                user.user_profile_id = current_user.get_id()
             if user_profile:
                 logger.info('Updating user settings for user %s'
                             % current_user.get_id())
