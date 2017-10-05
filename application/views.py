@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from datetime import datetime
 from flask import render_template, request, redirect, flash, jsonify
 from flask_login import LoginManager, login_user, logout_user, \
@@ -32,7 +33,7 @@ def show_home():
     response = json.loads(get_latest_post())
     latest_post = response['latest_post']
 
-    response = json.loads(get_latest_posts(5))
+    response = json.loads(get_latest_posts(5), object_pairs_hook=OrderedDict)
     if response:
         latest_posts = response
 
@@ -158,8 +159,11 @@ def edit_post(id):
                                featured_image=featured_image)
     if request.method == 'POST':
         if form.validate_on_submit():
+            if form.featured_image.data:
+                featured_image = base64.b64encode(form.featured_image.data.read())
             returned_post.title = form.title.data
             returned_post.content = form.content.data
+            returned_post.featured_image = featured_image if form.featured_image.data else None
             logger.info('Updating post %s for user %s' %
                         (id, current_user.get_id()))
             db.session.commit()
@@ -321,14 +325,12 @@ def get_latest_posts(number):
         .limit(number).all()
 
     if returned_posts:
-        latest_posts = {}
+        latest_posts = OrderedDict()
         for posts in returned_posts:
-            logger.info(posts)
             latest_posts[posts.id] = {
                 "title": posts.title,
-                "featured_image": str(posts.featured_image)
+                "featured_image": str(posts.featured_image),
             }
-
         return json.dumps(latest_posts)
     return json.dumps({"latest_posts": False})
 

@@ -4,7 +4,7 @@ html {
 }
 body {
   /* Margin bottom by footer height */
-  margin-bottom: 400px;
+  margin-bottom: 350px;
 }
 
 .red {
@@ -86,7 +86,7 @@ footer {
   position: absolute;
   bottom: 0;
   /* Set the fixed height of the footer here */
-  height: 400px;
+  height: 350px;
   width: 100%;
   background-image: linear-gradient(to bottom right, #F7F7F7, #EAFBFF);
 }

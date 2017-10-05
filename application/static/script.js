@@ -42,10 +42,14 @@ $("#update-post-submit").on("click", function(e) {
     if ($("#post-title").val() == "" || $("#post-content").val() == "") {
         displayNotification("failure", "Please enter", "all mandatory fields", 3000, 1000);
     } else {
+        var update_post_form = $("#update-post")[0]
+        var form_data = new FormData(update_post_form);
         $.ajax({
             type: "POST",
             url: "/admin/edit-post/"+post_id,
-            data: $("#update-post").serialize(),
+            data: form_data,
+            contentType: false,
+            processData: false,
             success: function(response) {
                 // Handle success response here
                 displayNotification("success", "Blog post", "updated successfully", 5000, 1000);
