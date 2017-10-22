@@ -9,12 +9,14 @@ class Posts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     content = db.Column(db.String, nullable=False)
+    featured_image = db.Column(db.LargeBinary, nullable=True)
     date_posted = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, title, content, date_posted, user_id):
+    def __init__(self, title, content, featured_image, date_posted, user_id):
         self.title = title
         self.content = content
+        self.featured_image = featured_image
         self.date_posted = datetime.now()
         self.user_id = user_id
 

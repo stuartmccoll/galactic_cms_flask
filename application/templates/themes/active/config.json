@@ -1,0 +1,9 @@
+{
+    "theme": {
+        "name": "Copernicus",
+        "description": "Galactic's default Copernicus theme",
+        "author": "Stuart McColl",
+        "author-website": "http://www.stuartmccoll.co.uk",
+        "config-name": "copernicus"
+    }
+}
