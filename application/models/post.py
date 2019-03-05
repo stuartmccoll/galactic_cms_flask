@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from application.init_app import db, ma
+from application.init_app import db
 
 
 class Posts(db.Model):
-    __tablename__ = 'posts'
+    __tablename__ = "posts"
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
@@ -21,15 +21,18 @@ class Posts(db.Model):
         self.user_id = user_id
 
     def __repr__(self):
-        return '<Posts : id=%r, title=%s, content=%s>' \
-                % (self.id, self.title, self.content)
+        return "<Posts : id=%r, title=%s, content=%s>" % (
+            self.id,
+            self.title,
+            self.content,
+        )
 
 
-class PostsSchema(ma.Schema):
-    class Meta:
-        # Fields to expose
-        fields = ('id', 'title', 'content', 'date_posted', 'user_id')
+# class PostsSchema(ma.Schema):
+# class Meta:
+# Fields to expose
+# fields = ('id', 'title', 'content', 'date_posted', 'user_id')
 
 
-posts_schema = PostsSchema()
-posts_schema = PostsSchema(many=True)
+# posts_schema = PostsSchema()
+# posts_schema = PostsSchema(many=True)

@@ -1,6 +1,6 @@
-FROM python:2.7
+FROM python:3.7
 
-MAINTAINER Stuart McColl "it@stuartmccoll.co.uk"
+LABEL author="it@stuartmccoll.co.uk"
 
 ADD . /app
 
@@ -14,6 +14,3 @@ EXPOSE 5000
 ENV FLASK_APP=manage.py
 
 RUN [ "chmod", "777", "wait-for-postgres.sh" ]
-
-# CMD [ "python", "-m", "flask", "run", "--host=0.0.0.0" ]
-# CMD [ "python", "manage.py", "runserver", "-h=0.0.0.0", "-p=5000"]

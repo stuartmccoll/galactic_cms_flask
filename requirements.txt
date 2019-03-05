@@ -1,11 +1,9 @@
-flask==0.12
+flask==1.0.2
 flask_login
-flask_marshmallow
 flask_migrate
 flask_script
 flask_sqlalchemy
 flask_wtf
-marshmallow_sqlalchemy
 mock
 nose
 psycopg2
