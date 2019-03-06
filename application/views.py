@@ -35,17 +35,12 @@ def load_user(user_id):
 
 @app.route("/")
 def show_home():
-    response = json.loads(get_latest_post())
-    latest_post = response["latest_post"]
-
-    response = json.loads(get_latest_posts(5), object_pairs_hook=OrderedDict)
-    if response:
-        latest_posts = response
-
     return render_template(
         "themes/active/index.html",
-        latest_post=latest_post,
-        latest_posts=latest_posts,
+        latest_post=json.loads(get_latest_post()),
+        latest_posts=json.loads(
+            get_latest_posts(5), object_pairs_hook=OrderedDict
+        ),
     )
 
 
@@ -60,7 +55,7 @@ def show_admin():
     )
     user = User.query.filter_by(id=current_user.get_id()).first()
     user_profile = UserProfile.query.filter_by(id=user.user_profile_id).first()
-    logger.info("Retrieving administrator dashboard for user_id: %s" % user.id)
+    logger.info(f"Retrieving administrator dashboard for user_id: {user.id}")
 
     return render_template(
         "admin.html", all_posts=posts, user=user, user_profile=user_profile
@@ -74,16 +69,16 @@ def show_login():
         logger.info("Retrieving login screen")
         return render_template("login.html", form=form)
     if request.method == "POST":
-        logger.info("Attempting login for user %s" % form.username.data)
+        logger.info(f"Attempting login for user {form.username.data}")
         if form.validate_on_submit():
             login_user(form.user)
-            logger.info("Login successful for user %s" % form.user.username)
+            logger.info(f"Login successful for user {form.user.username}")
             return redirect("/admin/dashboard")
         flash(
             "Invalid login credentials provided\nPlease try again",
             category="error",
         )
-        logger.error("Login failed for username %s" % form.username.data)
+        logger.error(f"Login failed for user {form.username.data}")
         return render_template("login.html", form=form)
 
 
@@ -93,8 +88,7 @@ def create_post():
     form = PostForm()
     if request.method == "GET":
         logger.info(
-            "Retrieving Create New Post screen for user %s"
-            % current_user.get_id()
+            f"Retrieving Create New Post screen for user {current_user.get_id()}"
         )
         return render_template("create-post.html", form=form)
     if request.method == "POST":
@@ -108,13 +102,12 @@ def create_post():
                 user_id=current_user.get_id(),
             )
             logger.info(
-                'Creating a New Post with the title "%s" for user %s'
-                % (form.title.data, current_user.get_id())
+                f"Creating a New Post with the title '{form.title.data}' for user {current_user.get_id()}"
             )
             db.session.add(post)
             db.session.commit()
             return json.dumps({"status": "success"})
-        logger.error("Create Post failed for user %s" % current_user.get_id())
+        logger.error(f"Create Post failed for user {current_user.get_id()}")
         return json.dumps({"status": "failure"})
 
 
@@ -127,7 +120,7 @@ def view_posts():
         .order_by(Posts.date_posted.desc())
     )
     logger.info(
-        "Retrieving View Posts screen for user %s" % current_user.get_id()
+        f"Retrieving View Posts screen for user {current_user.get_id()}"
     )
     return render_template("view-posts.html", posts=posts)
 
@@ -162,8 +155,7 @@ def view_post(id):
 @login_required
 def delete_post(id):
     logger.info(
-        "Processing delete-post request for user %s and post %s"
-        % (current_user.get_id(), id)
+        f"Processing delete-post request for user {current_user.get_id()} and post {id}"
     )
     db.session.query(Posts).filter_by(
         id=id, user_id=current_user.get_id()
@@ -184,8 +176,7 @@ def edit_post(id):
     )
     if request.method == "GET":
         logger.info(
-            "Retrieving Edit Post screen for user %s and post %s"
-            % (current_user.get_id(), id)
+            f"Retrieving Edit Post screen for user {current_user.get_id()} and post {id}"
         )
         form.title.data = returned_post.title
         form.content.data = returned_post.content
@@ -204,9 +195,7 @@ def edit_post(id):
             returned_post.featured_image = (
                 featured_image if form.featured_image.data else None
             )
-            logger.info(
-                "Updating post %s for user %s" % (id, current_user.get_id())
-            )
+            logger.info(f"Updating post {id} for user {current_user.get_id()}")
             db.session.commit()
             return "Post updated successfully", 200
 
@@ -221,8 +210,7 @@ def user_settings():
         if form.validate_on_submit():
             if not user_profile:
                 logger.info(
-                    "Creating new user settings for user %s"
-                    % current_user.get_id()
+                    f"Creating new user settings for user {current_user.get_id()}"
                 )
                 user_profile = UserProfile(
                     id=current_user.get_id(),
@@ -232,7 +220,7 @@ def user_settings():
                 user.user_profile_id = current_user.get_id()
             if user_profile:
                 logger.info(
-                    "Updating user settings for user %s" % current_user.get_id()
+                    f"Updating user settings for user {current_user.get_id()}"
                 )
                 user_profile.first_name = form.first_name.data
                 user_profile.last_name = form.last_name.data
@@ -242,8 +230,7 @@ def user_settings():
         return json.dumps({"status": "failure"})
     if request.method == "GET":
         logger.info(
-            "Retrieving User Settings screen for user %s"
-            % current_user.get_id()
+            f"Retrieving User Settings screen for user {current_user.get_id()}"
         )
         if user_profile:
             form.first_name.data = user_profile.first_name
@@ -258,43 +245,35 @@ def site_config():
     user = User.query.filter_by(id=current_user.get_id()).first()
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    logger.info("Current directory path is %s" % dir_path)
+    logger.info(f"Current directory path is {dir_path}")
     if dir_path == "/app/application":
-        logger.info(
-            "Checking that themes directory exists for user \
-                     %s"
-            % user.id
-        )
+        logger.info(f"Checking that themes directory exists for user{user.id}")
         if os.path.exists(dir_path + "/templates/themes"):
-            logger.info("Checking that themes exist for user %s" % user.id)
+            logger.info(f"Checking that themes exist for user {user.id}")
             themes = os.walk(dir_path + "/templates/themes").next()[1]
             logger.info(
-                "Found the following themes for user %s: \
-                         %s"
-                % (user.id, themes)
+                f"Found the following themes for user {user.id}: {themes}"
             )
 
             theme_dict = {}
 
             for theme in themes:
                 logger.info(
-                    "Checking that theme folder %s has a\
-                             config.json file"
-                    % theme
+                    f"Checking that theme folder {theme} has a config.json file"
                 )
 
                 theme_with_config = os.path.exists(
-                    dir_path + "/templates/themes/" + theme + "/config.json"
+                    f"{dir_path}/templates/themes/{theme}/config.json"
                 )
                 if theme_with_config:
                     logger.info(
-                        "Found config.json file for theme folder %s" % theme
+                        f"Found config.json file for theme folder {theme}"
                     )
 
                     theme_dict[str(theme)] = {}
 
                     with open(
-                        dir_path + "/templates/themes/" + theme + "/config.json"
+                        f"{dir_path}/templates/themes/{theme}/config.json"
                     ) as theme_config:
                         data = json.load(theme_config)
 
@@ -317,9 +296,7 @@ def site_config():
 
                 else:
                     logger.info(
-                        "Did not find config.json file \
-                                for theme folder %s"
-                        % theme
+                        f"Did not find config.json file for theme folder {theme}"
                     )
 
             logger.info(theme_dict)
@@ -335,46 +312,37 @@ def activate_theme(theme_name):
     user = User.query.filter_by(id=current_user.get_id()).first()
 
     if get_working_directory():
-        logger.info(
-            "Checking that themes directory exists for user \
-                     %s"
-            % user.id
-        )
+        logger.info(f"Checking that themes directory exists for user {user.id}")
         if os.path.exists(dir_path + "/templates/themes"):
 
             # Get config.json for active theme
             get_config = os.path.exists(
-                dir_path + "/templates/themes/active/config.json"
+                f"{dir_path}/templates/themes/active/config.json"
             )
             if get_config:
                 # Load config.json
                 with open(
-                    dir_path + "/templates/themes/active/config.json"
+                    f"{dir_path}/templates/themes/active/config.json"
                 ) as theme_config:
                     data = json.load(theme_config)
                     os.rename(
-                        dir_path + "/templates/themes/active",
-                        dir_path
-                        + "/templates/themes/"
-                        + data["theme"]["config-name"],
+                        f"{dir_path}/templates/themes/active",
+                        f"{dir_path}/templates/themes/{data['theme']['config-name']}",
                     )
 
             # Get config.json for theme to activate
             get_config = os.path.exists(
-                dir_path + "/templates/themes/" + theme_name + "/config.json"
+                f"{dir_path}/templates/themes/{theme_name}/config.json"
             )
             if get_config:
                 # Load config.json
                 with open(
-                    dir_path
-                    + "/templates/themes/"
-                    + theme_name
-                    + "/config.json"
+                    f"{dir_path}/templates/themes/{theme_name}/config.json"
                 ) as theme_config:
                     data = json.load(theme_config)
                     os.rename(
-                        dir_path + "/templates/themes/" + theme_name,
-                        dir_path + "/templates/themes/active",
+                        f"{dir_path}/templates/themes/{theme_name}",
+                        f"{dir_path}/templates/themes/active",
                     )
 
     return jsonify({"status": "success"}), 200
@@ -382,7 +350,7 @@ def activate_theme(theme_name):
 
 def get_working_directory():
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    logger.info("Current directory path is %s" % dir_path)
+    logger.info(f"Current directory path is {dir_path}")
     if dir_path == "/app/application":
         return dir_path
     return False
@@ -439,7 +407,7 @@ def get_next_post(current_post):
     returned_post = Posts.query.filter(Posts.id > current_post).first()
 
     if returned_post:
-        logger.info("next %s" % returned_post)
+        logger.info(f"Next post {returned_post}")
         return json.dumps({"next_post": returned_post.id})
     return json.dumps({"next_post": False})
 
@@ -448,6 +416,6 @@ def get_previous_post(current_post):
     returned_post = Posts.query.filter(Posts.id < current_post).first()
 
     if returned_post:
-        logger.info("previous %s" % returned_post)
+        logger.info(f"Previous post {returned_post}")
         return json.dumps({"previous_post": returned_post.id})
     return json.dumps({"previous_post": False})
