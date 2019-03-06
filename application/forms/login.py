@@ -6,28 +6,27 @@ from application.models.user import User
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
 
     def __init__(self, *args, **kwargs):
         FlaskForm.__init__(self, *args, **kwargs)
         self.user = None
 
     def validate(self):
-        rv = FlaskForm.validate(self)
-        if not rv:
-            return False
+        """
+        Validates user login credentials provided.
+        :param self: The current LoginForm object.
+        :returns: A Boolean indicating whether or not validation
+                  was successful.
+        """
+        if FlaskForm.validate(self):
+            user = User.query.filter_by(username=self.username.data).first()
+            if user and user.validate_login(
+                user.password, str(self.password.data)
+            ):
+                self.user = user
+                return True
 
-        user = User.query.filter_by(
-            username=self.username.data).first()
-        if user is None:
-            self.username.errors.append('Invalid login credentials provided \
-                                        \nPlease try again')
-            return False
-
-        if not user.validate_login(user.password, str(self.password.data)):
-            self.username.errors.append('Invalid login credentials')
-            return False
-
-        self.user = user
-        return True
+        self.username.errors.append(f"Invalid login credentials provided")
+        return False
